@@ -1,5 +1,3 @@
-[![Build Status](https://img.shields.io/travis/w3c/correlation-context/master.svg?label=validation%20service)](./test/)
-
 # Correlation Context Specification
 
 This repository is associated with the [Correlation Context](https://w3c.github.io/correlation-context/) specification.
@@ -7,7 +5,7 @@ This repository is associated with the [Correlation Context](https://w3c.github.
 Specification for distributed tracing context propagation format:
 
 - Correlation Context
-  [Report](https://w3c.github.io/distributed-tracing/report-correlation-context.html).
+  [Report](https://w3c.github.io/distributed-tracing/).
   Status: initial draft.
   - Rationale [document](correlation_context/HTTP_HEADER_FORMAT_RATIONALE.md)
 
