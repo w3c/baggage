@@ -1,24 +1,15 @@
-[![Build Status](https://img.shields.io/travis/w3c/distributed-tracing/master.svg?label=validation%20service)](./test/)
+[![Build Status](https://img.shields.io/travis/w3c/correlation-context/master.svg?label=validation%20service)](./test/)
 
-# Distributed Tracing Working group
+# Correlation Context Specification
 
-This repository is associated with the [Distributed Trace Context Working Group](https://www.w3.org/2018/distributed-tracing/).
+This repository is associated with the [Correlation Context](https://w3c.github.io/correlation-context/) specification.
 
 Specification for distributed tracing context propagation format:
 
-- Trace Context
-  [Report](https://w3c.github.io/distributed-tracing/report-trace-context.html).
-  Status: [First Public Working
-  Draft](https://www.w3.org/2017/Process-20170301/#working-draft).
-  - Rationale [document](trace_context/HTTP_HEADER_FORMAT_RATIONALE.md)
-  - Changes are tracked on GitHub, communicated in meetings and e-mails
-    distribution list.
 - Correlation Context
   [Report](https://w3c.github.io/distributed-tracing/report-correlation-context.html).
   Status: initial draft.
   - Rationale [document](correlation_context/HTTP_HEADER_FORMAT_RATIONALE.md)
-- Working group [charter](https://www.w3.org/2018/07/distributed-tracing.html) (as of working group creation). Live [charter document](https://w3c.github.io/distributed-tracing/charter.html).
-- Original [community group](https://www.w3.org/community/trace-context/).
 
 ## Team Communication
 
@@ -44,7 +35,7 @@ TODO: add link here
 
 ## Why are we doing this
 
-- If this becomes popular, frameworks and other services will automatically pass trace IDs 
+- If this becomes popular, frameworks and other services will automatically pass trace IDs
 through for correlated requests. This would prevent traces from hitting dead ends when a request
 reaches an un-instrumented service.
 - Once aligned on a header name, we can ask for a CORS exception from the W3C. This would allow

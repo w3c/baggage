@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset='utf-8'>
-    <title>Trace Context</title>
-    <script 
-     src='https://www.w3.org/Tools/respec/respec-w3c-common' 
+    <title>Propagation format for distributed trace context: Trace Context headers</title>
+    <script
+     src='https://www.w3.org/Tools/respec/respec-w3c-common'
      class='remove'></script>
-    <script class='remove'>
+     <script class='remove'>
       var respecConfig = {
         specStatus: "ED",
         editors: [{
@@ -28,13 +28,13 @@
           w3cid: "48276"
         }],
         github: {
-          repoURL: "https://github.com/w3c/distributed-tracing/",
+          repoURL: "https://github.com/w3c/correlation-context/",
           branch: "master",
         },
-        edDraftURI: "https://w3c.github.io/distributed-tracing/report-trace-context.html",
-        shortName: "distributed-tracing",
+        edDraftURI: "https://w3c.github.io/correlation-context/",
+        shortName: "correlation-context",
         format: "markdown",
-        subjectPrefix: "distributed-trace-context",
+        subjectPrefix: "correlation-context",
         wg: "Distributed Tracing Working Group",
         wgPublicList: "public-trace-context",
         wgURI: "https://www.w3.org/2018/distributed-tracing/",
@@ -54,11 +54,9 @@
         <section id='abstract' data-include="abstract/common-abstract.md" data-include-format='markdown'></section>
         <section id='sotd' data-include="abstract/common-sotd.md" data-include-format='markdown'></section>
 
-        <section data-include="trace_context/overview.md" data-include-format='markdown'></section>
-        
-        <section data-include="trace_context/HTTP_HEADER_FORMAT.md" data-include-format='markdown'></section>
+        <section data-include="abstract/correlation-context-overview.md" data-include-format='markdown'></section>
 
-        <section data-include="trace_context/privacy.md" data-include-format='markdown'></section>
-        <section data-include="trace_context/security.md" data-include-format='markdown'></section>
+        <section data-include="correlation_context/HTTP_HEADER_FORMAT.md" data-include-format='markdown'></section>
+
   </body>
 </html>
