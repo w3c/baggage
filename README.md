@@ -5,6 +5,7 @@ This repository is associated with the [Correlation Context](https://w3c.github.
 - Correlation Context
   [Report](https://w3c.github.io/distributed-tracing/).
   Status: initial draft.
+  - Header format [document](correlation_context/HTTP_HEADER_FORMAT.md)
   - Rationale [document](correlation_context/HTTP_HEADER_FORMAT_RATIONALE.md)
 
 ## Team Communication
