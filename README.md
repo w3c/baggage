@@ -3,8 +3,8 @@
 This repository is associated with the [Correlation
 Context](https://w3c.github.io/correlation-context/) specification.
 
-Status of the report is **First Public Working Draft**
-([FPWD](https://www.w3.org/2017/Process-20170301/#working-draft).
+Status of the report is
+[Editor Draft](https://www.w3.org/2017/Process-20170301/#working-draft).
 
 See rationale
 [document](correlation_context/HTTP_HEADER_FORMAT_RATIONALE.md) for
