@@ -18,7 +18,7 @@ as `v=<version>`.
 The header MAY be sent or received as multiple header fields. Multiple header fields MUST be handled as specified by <a data-cite='!RFC7230#field.order'>RFC7230 Section 3.2.2 Field Order</a>. The header SHOULD be sent as a single field when possible, but MAY be split into multiple header fields. When sending the header as multiple header fields, it MUST be split according to <a data-cite='!RFC7230#field.order'>RFC7230</a>. When receiving multiple header fields, they MUST be combined into a single header according to <a data-cite='!RFC7230#field.order'>RFC7230</a>.
 
 When multiple headers are combined as described before, the resulting combined header will contain
-a version identifier for each individual header that was concatinated. This is intended and parsers have to expect that after the first version identifier another version identifier might occur at any time marking subsequent key/value pairs compliant with the denoted version until another version identifier occurs.
+a version identifier for each individual header that was concatenated. This is intentional and parsers MUST NOT assume that any version field applies to the entire header value. After the first version identifier, another version identifier might occur at any time. Subsequent key/value pairs MUST be compliant with the denoted version until another version identifier is encountered or the end of the header value is reached.
 
 
 This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]], including the DIGIT rule in <a data-cite='!RFC5234#appendix-B.1'>appendix B.1 for RFC5234</a>. It also includes the `OWS` rule from <a data-cite='!RFC7230#whitespace'>RFC7230 section 3.2.3</a>.
