@@ -54,6 +54,18 @@ There are few considerations why the names should be case sensitive:
 Considering the intended use of this header, the value format and its encoding is
 opaque and specific to the systems producing and consuming it.
 
+## Versioning
+Versioning allows changes to the header format in future iterators of the spec.
+For that, a key/value pair denoting the version of the header has to be present as first item of the value list.
+The format `v=n` as first member of a comma separated list seems future proof as any new value format we might decide upon
+later can still fulfill this requirement.
+
+If there are multiple headers, each header has to start with the version identifier.
+As multiple headers may get concatenated into one, multiple version identifiers in a single header are to be expected.
+Once several versions of the spec exist, this can lead to different versions within one header.
+Consequently, a parser has to expect a version identifier at any position of the list.
+The version defined there will apply to all subsequent key/value pairs until another version identifier occurs.
+
 ## Limits
 
 The idea behind limits is to provide trace vendors common safeguards so the content of the
