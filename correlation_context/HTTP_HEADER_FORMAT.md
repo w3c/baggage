@@ -17,7 +17,6 @@ Header name: `Correlation-Context`
 
 
 # Header Content
-The header contains a `list` of key-value pairs with optional properties attached.
 
 This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]], including the DIGIT rule in <a data-cite='!RFC5234#appendix-B.1'>appendix B.1 for RFC5234</a>. It also includes the `OWS` rule from <a data-cite='!RFC7230#whitespace'>RFC7230 section 3.2.3</a>.
 
@@ -43,6 +42,13 @@ OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](h
 
 ## Example
 `key1=value1[;property1;property2], key2 = value2[;property3]`
+
+### list
+The header contains a `list` of key-value pairs with optional properties attached.
+It can not be guaranteed that keys are unique.
+
+Consumers MUST be able to handle duplicate keys while producers SHOULD try to dedupe the list.
+
 
 ### key
 ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2). Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
