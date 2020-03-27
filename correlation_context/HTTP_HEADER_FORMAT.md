@@ -44,7 +44,7 @@ OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](h
 `key1=value1[;property1;property2], key2 = value2[;property3]`
 
 ### list
-The header contains a `list` of key-value pairs with optional properties attached.
+List of key-value pairs with optional properties attached.
 It can not be guaranteed that keys are unique.
 
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to dedupe the list.
