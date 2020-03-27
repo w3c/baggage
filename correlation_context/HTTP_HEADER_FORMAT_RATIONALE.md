@@ -1,38 +1,36 @@
 # Correlation Context Header Format Rationale
 
-This document provides rationale for the decisions made for the `Correlation-Context` header format.
+This document provides a rationale for the decisions made for the `Correlation-Context` header format.
 
 ## General considerations
 
-- Should be human readable. Cryptic header will hide the fact of potential information disclosure.
-- Should be appende-able (comma-separated) https://tools.ietf.org/html/rfc7230#page-24 so nodes
-can add context properties without parsing an existing headers.
-- It is expected that the typical name will be a single word in latin and the value will be a
-short string in latin or a derivative of an url.
+- It should be human-readable. Cryptic headers would hide the fact of potential information disclosure.
+- It should be append-able (comma-separated) https://tools.ietf.org/html/rfc7230#page-24 so nodes
+can add context properties without parsing existing headers.
+- Keys are a single word in ASCII, and values should be a short string in UTF-8 or a derivative of an URL.
 
 ## Why a single header?
 
-Another option is to use prefixed headers, such as `trace-context-X` where `X` is a propagated
-field name. This could reduce the size of the data, particularly in http/2 where header
+Another option would be to use prefixed headers, such as `trace-context-X`, where `X` is a propagated
+field name. That could reduce the size of the data, particularly in http/2, where header
 compression can apply.
 
-Generally speaking `Correlation-Context` header may be split into multiple headers and
-compression may be at the same ballpark as repeating values will be converted into a single value
-in HPAC's dynamic collection. That's said there were no profiling made to make this decision.
+Generally speaking, a `Correlation-Context` header may be split into multiple headers, and
+compression may be at the same ballpark as repeating values are converted into a single value
+in HPAC's dynamic collection. That said, there was no profiling made to make this decision.
 
 The approach with multiple headers has the following problems:
 - Name values limitation is much more pressing when the context name is used a part of a header
 name.
-- The comma-separated format similar to the proposed still needs to be supported in every
-individual header. This makes parsing harder.
-- Single header is easier to configure for tracing by many app servers.
+- The comma-separated format similar to the proposed still needs to be supported in every individual header which makes parsing harder.
+- A single header is more comfortable to configure for tracing by many app servers.
 
 ## Why not Vary-style?
 
 The [Vary](https://tools.ietf.org/html/rfc7231#section-7.1.4) approach is another alternative,
 which could be used to accomplish the same. For example, `Correlation-Context: x-b3-parentid;
 ttl=1` could tell the propagation to look at and forward the parent ID header, but only to the
-next hop. This has an advantage of http header compression (hpack) and also weave-in with legacy
+next hop. This has an advantage of HTTP header compression (hpack) and also weave-in with legacy
 tracing headers.
 
 Vary approach may be implemented as a new "header reference" value type `ref`.
@@ -40,38 +38,26 @@ Vary approach may be implemented as a new "header reference" value type `ref`.
 
 ## Trimming of spaces
 
-Header should be human readable and editable. Thus spaces are allowed before and after the comma, equal sign, and semicolon
-separators. It makes human-editing of headers less error-prone. It also allows better visual separation of fields when value modified manually.
+The header should be human-readable and editable. Thus spaces are allowed before and after the comma, equal sign, and semicolon separators. It makes manual editing of headers less error-prone. It also allows better visual separation of fields when value modified manually.
 
 ## Case sensitivity of names
 
 There are few considerations why the names should be case sensitive:
-- some keys may be a url query string parameters which are case sensitive
-- forcing lower case will decrease readability of the names written in camel case
+- some keys may be a URL query string parameters which are case sensitive
+- forcing lower case decreases readability of the names written in camel case
 
 ## Value format
+While the semantics of header values are specific to the producer and consumer of a key/value pair, we
+concluded that string values should be encoded at the producer and decoded at the consumer and that the specification should define a mechanism for that.
 
-Considering the intended use of this header, the value format and its encoding is
-opaque and specific to the systems producing and consuming it.
+Url encoding is a low-overhead way to encode Unicode characters for non-Latin characters in the values. Url encoding keeps a single word in Latin unchanged and accessible.
 
-## Versioning
-Versioning allows changes to the header format in future iterators of the spec.
-For that, a key/value pair denoting the version of the header has to be present as first item of the value list.
-The format `v=n` as first member of a comma separated list seems future proof as any new value format we might decide upon
-later can still fulfill this requirement.
-
-If there are multiple headers, each header has to start with the version identifier.
-As multiple headers may get concatenated into one, multiple version identifiers in a single header are to be expected.
-Once several versions of the spec exist, this can lead to different versions within one header.
-Consequently, a parser has to expect a version identifier at any position of the list.
-The version defined there will apply to all subsequent key/value pairs until another version identifier occurs.
 
 ## Limits
 
-The idea behind limits is to provide trace vendors common safeguards so the content of the
+The idea behind limits is to provide trace vendors standard safeguards so the content of the
 `Correlation-Context` header can be stored with the request. Thus the limits are defined on the
-number of keys, max pair length and the total size. The last limit is the most important in many
-scenarios as it allows to plan for the data storage limits.
+number of keys, max pair length, and the total size. The total size limit is the most important for planning data storage requirements.
 
 Another consideration was that HTTP cookies provide a similar way to pass custom data via HTTP
 headers. So the limits should make the correlation context name-value pairs fit the typical
