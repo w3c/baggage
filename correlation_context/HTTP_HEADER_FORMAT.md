@@ -47,7 +47,7 @@ OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](h
 List of key-value pairs with optional properties attached.
 It can not be guaranteed that keys are unique.
 
-Consumers MUST be able to handle duplicate keys while producers SHOULD try to dedupe the list.
+Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
 
 ### key
