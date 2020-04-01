@@ -40,7 +40,7 @@ Vary approach may be implemented as a new "header reference" value type `ref`.
 
 The header should be human-readable and editable. Thus spaces are allowed before and after the comma, equal sign, and semicolon separators. It makes manual editing of headers less error-prone. It also allows better visual separation of fields when value modified manually.
 
-## Case sensitivity of names
+## Case sensitivity of keys
 
 There are few considerations why the names should be case sensitive:
 - some keys may be a URL query string parameters which are case sensitive
@@ -69,4 +69,3 @@ Chrome.
 value with some extra details as a single context name-value pair. It is also a typical cookie
 size limitation.
 - *Maximum total length of all name-value pairs* - TODO: LOOKING FOR SUGGESTIONS HERE
-
