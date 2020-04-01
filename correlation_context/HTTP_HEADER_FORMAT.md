@@ -59,7 +59,7 @@ The value contains an URL encoded UTF-8 string. Leading and trailing OWS is allo
 
 ### property
 
-Properties MAY be appended to values and contain a keys & key-value pairs `;` delimited list `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
+Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
 
 
