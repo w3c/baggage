@@ -29,7 +29,7 @@ name.
 
 The [Vary](https://tools.ietf.org/html/rfc7231#section-7.1.4) approach is another alternative,
 where a fixed header is used to enumerate the list of other headers that actually contain the data.
-which could be used to accomplish the same. For example, `Correlation-Context: x-b3-parentid;
+which could be used to accomplish the same. For example, `Correlation-Context: x-department; x-user-id;
 ttl=1` could tell the propagation to look at and forward the parent ID header, but only to the
 next hop. This has an advantage of HTTP header compression (hpack) and also weave-in with legacy
 tracing headers.
