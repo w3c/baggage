@@ -41,7 +41,7 @@ OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](h
 3. Maximum total length of all name-value pairs: `8192`.
 
 ## Example
-`key1=value1;property1;property2, key2 = value2; property3, key3=value3;propertyKey=propertyValue`
+`key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue`
 
 ### list
 List of key-value pairs with optional properties attached.
