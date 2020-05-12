@@ -23,7 +23,7 @@ Multiple correlation context headers are allowed. Values can be combined in a si
 
 ## Name format
 
-Url encoded string. Spaces are allows before and after the name. Header with the trimmed name and with spaces before and after name MUST be considered identical.
+Url encoded string. Spaces are allowed before and after the name. Header with the trimmed name and with spaces before and after name MUST be considered identical.
 
 ## Value format
 
