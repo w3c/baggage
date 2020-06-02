@@ -46,19 +46,17 @@ OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](h
 ### list
 List of key-value pairs with optional properties attached.
 It can not be guaranteed that keys are unique.
-
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
-
 ### key
-ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2). Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
+ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2). 
+Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
-
-The value contains an URL encoded UTF-8 string. Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
+A value contains an URL encoded UTF-8 string. 
+Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### property
-
 Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
 
