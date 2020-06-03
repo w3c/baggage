@@ -23,7 +23,7 @@ The approach with multiple headers has the following problems:
 - Name values limitation is much more pressing when the context name is used a part of a header
 name.
 - The comma-separated format similar to the proposed still needs to be supported in every individual header which makes parsing harder.
-- A single header is more comfortable to configure for tracing by many app servers.
+- A single header is more comfortable to configure for tracing by many app servers, and makes CORS whitelisting more straightforward.
 
 ## Why not Vary-style?
 
