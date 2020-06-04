@@ -1,43 +1,69 @@
 # Correlation Context HTTP Header Format
 
-A correlation context header is used to pass the name-value context properties for the trace. This is a companion header for the `traceparent`. The values should be passed along to any child requests. Note that uniqueness of the key within the `Correlation-Context` is not guaranteed. Context received from upstream service may be altered before passing it along.
+The correlation context header is used to propagate user-supplied key-value pairs through a trace.
+A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
+
+Multiple correlation context headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 *See [rationale document](HTTP_HEADER_FORMAT_RATIONALE.md) for details of decisions made for this format.*
 
-# Format
 
-## Header name
+# Header Name
 
-`Correlation-Context`
+Header name: `Correlation-Context`
 
-Multiple correlation context headers are allowed. Values can be combined in a single header according to the [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+@TODO: Agree on the header name
+@TODO: Add more information on casing once we agree on the final header name
 
-## Header value
 
-`name1=value1[;properties1],name2=value2[;properties2]`
+# Header Content
 
-**Limits:**
+This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]], including the DIGIT rule in <a data-cite='!RFC5234#appendix-B.1'>appendix B.1 for RFC5234</a>. It also includes the `OWS` rule (optional whitespace) from <a data-cite='!RFC7230#whitespace'>RFC7230 section 3.2.3</a>.
+
+## Definition
+
+```
+list        = list-member 0*179( OWS "," OWS list-member )
+list-member = key OWS "=" OWS value *( OWS ";" OWS property )
+property    = key OWS "=" OWS value
+property    = key OWS
+key         = <token, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2)>
+value       = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+              ; US-ASCII characters excluding CTLs,
+              ; whitespace, DQUOTE, comma, semicolon,
+              ; and backslash
+OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](https://tools.ietf.org/html/rfc7230#section-3.2.3)>
+```
+
+## Limits
 1. Maximum number of name-value pairs: `180`.
 2. Maximum number of bytes per a single name-value pair: `4096`.
 3. Maximum total length of all name-value pairs: `8192`.
 
-## Name format
+## Example
+`key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue`
 
-Url encoded string. Spaces are allowed before and after the name. Header with the trimmed name and with spaces before and after name MUST be considered identical.
+### list
+List of key-value pairs with optional properties attached.
+It can not be guaranteed that keys are unique.
+Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
-## Value format
+### key
+ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2). 
+Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
-Value starts after equal sign and ends with the special character `;`, separator `,` or end of string. Value represents a url encoded string and case sensitive. Spaces are allowed in the beginning and the end of the value. Value with spaces before and after MUST be considered identical to the trimmed value. 
+### value
+A value contains an URL encoded UTF-8 string. 
+Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
-## Properties
+### property
+Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
+Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
 
-Properties are expected to be in a format of keys & key-value pairs `;` delimited list `;k1=v1;k2;k3=v3`. Some properties may be known to the library or platform processing the header. Such properties may effect how library or platform processes corresponding name-value pair. Properties unknown to the library or platform MUST be preserved if name and/or value wasn't modified by the library or platform.
-
-Spaces are allowed between properties and before and after equal sign. Properties with spaces MUST be considered identical to properties with all spaces trimmed.
 
 # Examples of HTTP headers
 
-Single header: 
+Single header:
 
 ```
 Correlation-Context: userId=sergey,serverNode=DF:28,isProduction=false
@@ -73,4 +99,3 @@ For example, if you have non-production requests that flow through the same serv
 ```
 Correlation-Context: isProduction=false
 ```
-
