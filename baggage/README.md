@@ -1,6 +1,6 @@
 # Baggage Header
 
-Baggage context header is used to propagate properties not defined in `Trace-Parent`. There
+`Baggage` header is used to propagate properties not defined in `Trace-Parent`. There
 are two common use cases. First is to define a context on trace initiation. Such context will
 have customer's identity, high-level operation name and other properties like a flight name.
 Second use case is to pass the caller's name to the next component. This name-value pair will be
