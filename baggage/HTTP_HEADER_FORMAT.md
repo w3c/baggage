@@ -3,7 +3,7 @@
 The baggage header is used to propagate user-supplied key-value pairs through a trace.
 A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
 
-Multiple baggage headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+Multiple `Baggage` headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 *See [rationale document](HTTP_HEADER_FORMAT_RATIONALE.md) for details of decisions made for this format.*
 
