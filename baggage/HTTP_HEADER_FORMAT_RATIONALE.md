@@ -1,6 +1,6 @@
-# Correlation Context Header Format Rationale
+# Baggage Header Format Rationale
 
-This document provides a rationale for the decisions made for the `Correlation-Context` header format.
+This document provides a rationale for the decisions made for the `Baggage` header format.
 
 ## General considerations
 
@@ -15,7 +15,7 @@ Another option would be to use prefixed headers, such as `trace-context-X`, wher
 field name. That could reduce the size of the data, particularly in http/2, where header
 compression can apply.
 
-Generally speaking, a `Correlation-Context` header may be split into multiple headers, and
+Generally speaking, a `Baggage` header may be split into multiple headers, and
 compression may be at the same ballpark as repeating values are converted into a single value
 in HPAC's dynamic collection. That said, there was no profiling made to make this decision.
 
@@ -29,13 +29,13 @@ name.
 
 The [Vary](https://tools.ietf.org/html/rfc7231#section-7.1.4) approach is another alternative,
 where a fixed header is used to enumerate the list of other headers that actually contain the data.
-which could be used to accomplish the same. For example, `Correlation-Context: x-department; x-user-id;
+which could be used to accomplish the same. For example, `Baggage: x-department; x-user-id;
 ttl=1` could tell the propagation to look at and forward the parent ID header, but only to the
 next hop. This has an advantage of HTTP header compression (hpack) and also weave-in with legacy
 tracing headers.
 
 Vary approach may be implemented as a new "header reference" value type `ref`.
-`Correlation-Context: x-b3-parentid;type=ref;ttl=1` if proven needed.
+`Baggage: x-b3-parentid;type=ref;ttl=1` if proven needed.
 
 ## Trimming of spaces
 
@@ -57,11 +57,11 @@ Url encoding is a low-overhead way to encode Unicode characters for non-Latin ch
 ## Limits
 
 The idea behind limits is to provide trace vendors standard safeguards so the content of the
-`Correlation-Context` header can be stored with the request. Thus the limits are defined on the
+`Baggage` header can be stored with the request. Thus the limits are defined on the
 number of keys, max pair length, and the total size. The total size limit is the most important for planning data storage requirements.
 
 Another consideration was that HTTP cookies provide a similar way to pass custom data via HTTP
-headers. So the limits should make the correlation context name-value pairs fit the typical
+headers. So the limits should make the baggage name-value pairs fit the typical
 cookie limits.
 
 - *Maximum number of name-value pairs* - this limit was taken as a number of cookies allowed by
