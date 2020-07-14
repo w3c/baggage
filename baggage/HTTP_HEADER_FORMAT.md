@@ -66,7 +66,7 @@ Leading and trailing OWS is allowed but MUST be trimmed when converting the head
 Single header:
 
 ```
-Bag: userId=sergey,serverNode=DF:28,isProduction=false
+Baggage: userId=sergey,serverNode=DF:28,isProduction=false
 ```
 
 Context might be split into multiple headers:
