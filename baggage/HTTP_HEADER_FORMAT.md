@@ -12,10 +12,6 @@ Multiple baggage headers are allowed. Values can be combined in a single header 
 
 Header name: `Baggage`
 
-@TODO: Agree on the header name
-@TODO: Add more information on casing once we agree on the final header name
-
-
 # Header Content
 
 This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]], including the DIGIT rule in <a data-cite='!RFC5234#appendix-B.1'>appendix B.1 for RFC5234</a>. It also includes the `OWS` rule (optional whitespace) from <a data-cite='!RFC7230#whitespace'>RFC7230 section 3.2.3</a>.
