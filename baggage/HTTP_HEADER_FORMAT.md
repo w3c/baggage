@@ -1,6 +1,6 @@
 # Baggage HTTP Header Format
 
-The baggage header is used to propagate user-supplied key-value pairs through a trace.
+The `Baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
 A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
 
 Multiple `Baggage` headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
