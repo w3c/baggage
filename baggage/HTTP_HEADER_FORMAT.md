@@ -1,20 +1,16 @@
-# Correlation Context HTTP Header Format
+# Baggage HTTP Header Format
 
-The correlation context header is used to propagate user-supplied key-value pairs through a trace.
+The `Baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
 A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
 
-Multiple correlation context headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+Multiple `Baggage` headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 *See [rationale document](HTTP_HEADER_FORMAT_RATIONALE.md) for details of decisions made for this format.*
 
 
 # Header Name
 
-Header name: `Correlation-Context`
-
-@TODO: Agree on the header name
-@TODO: Add more information on casing once we agree on the final header name
-
+Header name: `Baggage`
 
 # Header Content
 
@@ -49,11 +45,11 @@ It can not be guaranteed that keys are unique.
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
 ### key
-ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2). 
+ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2).
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
-A value contains an URL encoded UTF-8 string. 
+A value contains an URL encoded UTF-8 string.
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### property
@@ -66,36 +62,36 @@ Leading and trailing OWS is allowed but MUST be trimmed when converting the head
 Single header:
 
 ```
-Correlation-Context: userId=sergey,serverNode=DF:28,isProduction=false
+Baggage: userId=sergey,serverNode=DF:28,isProduction=false
 ```
 
 Context might be split into multiple headers:
 
 ```
-Correlation-Context: userId=sergey
-Correlation-Context: serverNode=DF%3A28,isProduction=false
+Baggage: userId=sergey
+Baggage: serverNode=DF%3A28,isProduction=false
 ```
 
 Values and names might begin and end with spaces:
 
 ```
-Correlation-Context: userId =   sergey
-Correlation-Context: serverNode = DF%3A28, isProduction = false
+Baggage: userId =   sergey
+Baggage: serverNode = DF%3A28, isProduction = false
 ```
 
 ## Example use case
 
 For example, if all of your data needs to be sent to a single node, you could propagate a property indicating that.
 ```
-Correlation-Context: serverNode=DF:28
+Baggage: serverNode=DF:28
 ```
 
 For example, if you need to log the original user ID when making transactions arbitrarily deep into a trace.
 ```
-Correlation-Context: userId=sergey
+Baggage: userId=sergey
 ```
 
 For example, if you have non-production requests that flow through the same services as production requests.
 ```
-Correlation-Context: isProduction=false
+Baggage: isProduction=false
 ```

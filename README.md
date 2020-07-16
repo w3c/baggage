@@ -1,13 +1,12 @@
-# Correlation Context Specification
+# Baggage Specification
 
-This repository is associated with the [Correlation
-Context](https://w3c.github.io/correlation-context/) specification.
+This repository is associated with the [Baggage](https://w3c.github.io/badgage/) specification.
 
 Status of the report is
 [Editor Draft](https://www.w3.org/2017/Process-20170301/#working-draft).
 
 See rationale
-[document](correlation_context/HTTP_HEADER_FORMAT_RATIONALE.md) for
+[document](baggage/HTTP_HEADER_FORMAT_RATIONALE.md) for
 clarifications.
 
 ## Team Communication
@@ -21,7 +20,7 @@ made in specification.
 
 ## Goal
 
-This specification defines propagation of context for events correlation
+This specification defines propagation of baggage for events correlation
 beyond the request identification that is covered by [trace
 context](https://w3c.github.io/trace-context/) specification. Our goal
 is to share this with the community so that various tracing and
