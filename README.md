@@ -1,6 +1,6 @@
 # Baggage Specification
 
-This repository is associated with the [Baggage](https://w3c.github.io/badgage/) specification.
+This repository is associated with the [Baggage](https://w3c.github.io/baggage/) specification.
 
 Status of the report is
 [Editor Draft](https://www.w3.org/2017/Process-20170301/#working-draft).
