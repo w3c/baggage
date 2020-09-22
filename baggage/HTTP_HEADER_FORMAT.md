@@ -28,7 +28,7 @@ value       = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
               ; US-ASCII characters excluding CTLs,
               ; whitespace, DQUOTE, comma, semicolon,
               ; and backslash
-OWS         = OWS ; optional white space, as defined in RFC 7230, Section 3.2.3
+OWS         = *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
 
 ## Limits
