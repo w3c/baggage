@@ -41,6 +41,13 @@ Vary approach may be implemented as a new "header reference" value type `ref`.
 
 The header should be human-readable and editable. Thus spaces are allowed before and after the comma, equal sign, and semicolon separators. It makes manual editing of headers less error-prone. It also allows better visual separation of fields when value modified manually.
 
+## Lowercase header name
+
+In order to maximize the portability of the `baggage` header it is intentionally specified as a single lowercase word.
+While HTTP header names are case-insensitive, the `baggage` header is meant to be propagated over other protocols that have
+different constraints. Representing the header as a single lowercase word maximizes the use and reduces the chance of error
+when using the header in non-HTTP scenarios.
+
 ## Case sensitivity of keys
 
 There are few considerations why the names should be case sensitive:
