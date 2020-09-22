@@ -1,16 +1,16 @@
 # Baggage HTTP Header Format
 
-The `Baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
+The `baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
 A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
 
-Multiple `Baggage` headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+Multiple `baggage` headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 *See [rationale document](HTTP_HEADER_FORMAT_RATIONALE.md) for details of decisions made for this format.*
 
 
 # Header Name
 
-Header name: `Baggage`
+Header name: `baggage`
 
 # Header Content
 
@@ -62,36 +62,36 @@ Leading and trailing OWS is allowed but MUST be trimmed when converting the head
 Single header:
 
 ```
-Baggage: userId=sergey,serverNode=DF:28,isProduction=false
+baggage: userId=sergey,serverNode=DF:28,isProduction=false
 ```
 
 Context might be split into multiple headers:
 
 ```
-Baggage: userId=sergey
-Baggage: serverNode=DF%3A28,isProduction=false
+baggage: userId=sergey
+baggage: serverNode=DF%3A28,isProduction=false
 ```
 
 Values and names might begin and end with spaces:
 
 ```
-Baggage: userId =   sergey
-Baggage: serverNode = DF%3A28, isProduction = false
+baggage: userId =   sergey
+baggage: serverNode = DF%3A28, isProduction = false
 ```
 
 ## Example use case
 
 For example, if all of your data needs to be sent to a single node, you could propagate a property indicating that.
 ```
-Baggage: serverNode=DF:28
+baggage: serverNode=DF:28
 ```
 
 For example, if you need to log the original user ID when making transactions arbitrarily deep into a trace.
 ```
-Baggage: userId=sergey
+baggage: userId=sergey
 ```
 
 For example, if you have non-production requests that flow through the same services as production requests.
 ```
-Baggage: isProduction=false
+baggage: isProduction=false
 ```
