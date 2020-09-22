@@ -18,7 +18,7 @@ This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]]
 
 ## Definition
 
-```abnf
+```ABNF
 list        = list-member 0*179( OWS "," OWS list-member )
 list-member = key OWS "=" OWS value *( OWS ";" OWS property )
 property    = key OWS "=" OWS value
