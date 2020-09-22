@@ -20,7 +20,7 @@ This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]]
 
 ```
 list        = list-member 0*179( OWS "," OWS list-member )
-list-member = key OWS "=" OWS value *( OWS ";" OWS property )
+list-member = property *( OWS ";" OWS property )
 property    = key OWS "=" OWS value
 property    = key OWS
 key         = <token, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2)>
