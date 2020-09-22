@@ -62,20 +62,20 @@ Leading and trailing OWS is allowed but MUST be trimmed when converting the head
 Single header:
 
 ```
-Baggage: userId=sergey,serverNode=DF:28,isProduction=false
+Baggage: userId=alice,serverNode=DF:28,isProduction=false
 ```
 
 Context might be split into multiple headers:
 
 ```
-Baggage: userId=sergey
+Baggage: userId=alice
 Baggage: serverNode=DF%3A28,isProduction=false
 ```
 
 Values and names might begin and end with spaces:
 
 ```
-Baggage: userId =   sergey
+Baggage: userId =   alice
 Baggage: serverNode = DF%3A28, isProduction = false
 ```
 
@@ -88,7 +88,7 @@ Baggage: serverNode=DF:28
 
 For example, if you need to log the original user ID when making transactions arbitrarily deep into a trace.
 ```
-Baggage: userId=sergey
+Baggage: userId=alice
 ```
 
 For example, if you have non-production requests that flow through the same services as production requests.
