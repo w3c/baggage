@@ -18,17 +18,17 @@ This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]]
 
 ## Definition
 
-```
+```abnf
 list        = list-member 0*179( OWS "," OWS list-member )
 list-member = key OWS "=" OWS value *( OWS ";" OWS property )
 property    = key OWS "=" OWS value
 property    = key OWS
-key         = <token, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2)>
+key         = <token, as defined in RFC 2616, Section 2.2>
 value       = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
               ; US-ASCII characters excluding CTLs,
               ; whitespace, DQUOTE, comma, semicolon,
               ; and backslash
-OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](https://tools.ietf.org/html/rfc7230#section-3.2.3)>
+OWS         = <optional white space, as defined in RFC 7230, Section 3.2.3>
 ```
 
 ## Limits
