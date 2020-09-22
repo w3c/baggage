@@ -49,7 +49,7 @@ ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
-A value contains an URL encoded UTF-8 string.
+A value contains a URL encoded UTF-8 string.
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### property

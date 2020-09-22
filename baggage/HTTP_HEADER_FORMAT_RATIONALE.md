@@ -7,7 +7,7 @@ This document provides a rationale for the decisions made for the `Baggage` head
 - It should be human-readable. Cryptic headers would hide the fact of potential information disclosure.
 - It should be append-able (comma-separated) https://tools.ietf.org/html/rfc7230#page-24 so nodes
 can add context properties without parsing existing headers.
-- Keys are a single word in ASCII, and values should be a short string in UTF-8 or a derivative of an URL.
+- Keys are a single word in ASCII, and values should be a short string in UTF-8 or a derivative of a URL.
 
 ## Why a single header?
 
