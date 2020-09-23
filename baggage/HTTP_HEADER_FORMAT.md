@@ -3,7 +3,7 @@
 The `baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
 A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
 
-Multiple `baggage` headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+Multiple `baggage` headers are allowed. Values can be combined in a single header according to [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 *See [rationale document](HTTP_HEADER_FORMAT_RATIONALE.md) for details of decisions made for this format.*
 
@@ -17,22 +17,26 @@ implementations SHOULD keep the header name lowercase.
 
 # Header Content
 
-This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]], including the DIGIT rule in <a data-cite='!RFC5234#appendix-B.1'>appendix B.1 for RFC5234</a>. It also includes the `OWS` rule (optional whitespace) from <a data-cite='!RFC7230#whitespace'>RFC7230 section 3.2.3</a>.
+This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]].
 
 ## Definition
 
+```ABNF
+list        =  list-member 0*179( OWS "," OWS list-member )
+list-member =  key OWS "=" OWS value *( OWS ";" OWS property )
+property    =  key OWS "=" OWS value
+property    =/ key OWS
+key         =  token ; as defined in RFC 2616, Section 2.2
+value       =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+               ; US-ASCII characters excluding CTLs,
+               ; whitespace, DQUOTE, comma, semicolon,
+               ; and backslash
+OWS         =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
-list        = list-member 0*179( OWS "," OWS list-member )
-list-member = key OWS "=" OWS value *( OWS ";" OWS property )
-property    = key OWS "=" OWS value
-property    = key OWS
-key         = <token, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2)>
-value       = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
-              ; US-ASCII characters excluding CTLs,
-              ; whitespace, DQUOTE, comma, semicolon,
-              ; and backslash
-OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](https://tools.ietf.org/html/rfc7230#section-3.2.3)>
-```
+
+`token` is defined in [[!RFC2616]], Section 2.2: https://tools.ietf.org/html/rfc2616#section-2.2
+
+The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.ietf.org/html/rfc7230#section-3.2.3
 
 ### list
 List of key-value pairs with optional properties attached.
@@ -40,7 +44,7 @@ It can not be guaranteed that keys are unique.
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
 ### key
-ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2).
+ASCII string according to the `token` format, defined in [RFC2616, Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2).
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
