@@ -1,4 +1,4 @@
-# Contributing into Baggage
+# Contributing into baggage
 
 This repository is being used for work in the [W3C Distributed Trace Context Working Group](https://www.w3.org/2018/distributed-tracing/).
 

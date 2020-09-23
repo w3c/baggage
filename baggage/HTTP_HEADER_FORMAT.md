@@ -1,16 +1,19 @@
 # Baggage HTTP Header Format
 
-The `Baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
+The `baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
 A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
 
-Multiple `Baggage` headers are allowed. Values can be combined in a single header according to [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+Multiple `baggage` headers are allowed. Values can be combined in a single header according to [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 *See [rationale document](HTTP_HEADER_FORMAT_RATIONALE.md) for details of decisions made for this format.*
 
 
 # Header Name
 
-Header name: `Baggage`
+Header name: `baggage`
+
+In order to increase interoperability across multiple protocols and encourage successful integration,
+implementations SHOULD keep the header name lowercase.
 
 # Header Content
 
@@ -35,14 +38,6 @@ OWS         =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Se
 
 The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.ietf.org/html/rfc7230#section-3.2.3
 
-## Limits
-1. Maximum number of name-value pairs: `180`.
-2. Maximum number of bytes per a single name-value pair: `4096`.
-3. Maximum total length of all name-value pairs: `8192`.
-
-## Example
-`key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue`
-
 ### list
 List of key-value pairs with optional properties attached.
 It can not be guaranteed that keys are unique.
@@ -53,48 +48,56 @@ ASCII string according to the `token` format, defined in [RFC2616, Section 2.2](
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
-A value contains an URL encoded UTF-8 string.
+A value contains a URL encoded UTF-8 string.
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### property
 Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
 
+## Limits
+1. Maximum number of name-value pairs: `180`.
+2. Maximum number of bytes per a single name-value pair: `4096`.
+3. Maximum total length of all name-value pairs: `8192`.
+
+## Example
+`key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue`
+
 # Examples of HTTP headers
 
 Single header:
 
 ```
-Baggage: userId=sergey,serverNode=DF:28,isProduction=false
+baggage: userId=alice,serverNode=DF:28,isProduction=false
 ```
 
 Context might be split into multiple headers:
 
 ```
-Baggage: userId=sergey
-Baggage: serverNode=DF%3A28,isProduction=false
+baggage: userId=alice
+baggage: serverNode=DF%3A28,isProduction=false
 ```
 
 Values and names might begin and end with spaces:
 
 ```
-Baggage: userId =   sergey
-Baggage: serverNode = DF%3A28, isProduction = false
+baggage: userId =   alice
+baggage: serverNode = DF%3A28, isProduction = false
 ```
 
 ## Example use case
 
 For example, if all of your data needs to be sent to a single node, you could propagate a property indicating that.
 ```
-Baggage: serverNode=DF:28
+baggage: serverNode=DF:28
 ```
 
 For example, if you need to log the original user ID when making transactions arbitrarily deep into a trace.
 ```
-Baggage: userId=sergey
+baggage: userId=alice
 ```
 
 For example, if you have non-production requests that flow through the same services as production requests.
 ```
-Baggage: isProduction=false
+baggage: isProduction=false
 ```
