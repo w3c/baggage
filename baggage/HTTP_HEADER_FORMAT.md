@@ -3,7 +3,7 @@
 The `Baggage` header is used to propagate user-supplied key-value pairs through a distributed request.
 A received header MAY be altered to change or add information and it MUST be passed on to all downstream request.
 
-Multiple `Baggage` headers are allowed. Values can be combined in a single header according to  [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+Multiple `Baggage` headers are allowed. Values can be combined in a single header according to [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 *See [rationale document](HTTP_HEADER_FORMAT_RATIONALE.md) for details of decisions made for this format.*
 
@@ -14,7 +14,7 @@ Header name: `Baggage`
 
 # Header Content
 
-This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]], including the DIGIT rule in <a data-cite='!RFC5234#appendix-B.1'>appendix B.1 for RFC5234</a>. It also includes the `OWS` rule (optional whitespace) from <a data-cite='!RFC7230#whitespace'>RFC7230 section 3.2.3</a>.
+This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]].
 
 ## Definition
 
@@ -31,6 +31,9 @@ value       =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 OWS         =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
 
+`token` is defined in [RFC2616, Section 2.2].
+The definition of `OWS` is taken from [RFC7230, Section 3.2.3].
+
 ## Limits
 1. Maximum number of name-value pairs: `180`.
 2. Maximum number of bytes per a single name-value pair: `4096`.
@@ -45,7 +48,7 @@ It can not be guaranteed that keys are unique.
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
 ### key
-ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2).
+ASCII string according to the `token` format, defined in [RFC2616, Section 2.2].
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
@@ -56,6 +59,8 @@ Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when conv
 Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
 
+[RFC2616, Section 2.2]: https://tools.ietf.org/html/rfc2616#section-2.2
+[RFC7230, Section 3.2.3]: tools.ietf.org/html/rfc7230#section-3.2.3
 
 # Examples of HTTP headers
 
