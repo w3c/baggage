@@ -34,14 +34,6 @@ value       = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 OWS         = <Optional white space, as defined in [[RFC7230], Section 3.2.3.](https://tools.ietf.org/html/rfc7230#section-3.2.3)>
 ```
 
-## Limits
-1. Maximum number of name-value pairs: `180`.
-2. Maximum number of bytes per a single name-value pair: `4096`.
-3. Maximum total length of all name-value pairs: `8192`.
-
-## Example
-`key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue`
-
 ### list
 List of key-value pairs with optional properties attached.
 It can not be guaranteed that keys are unique.
@@ -59,6 +51,13 @@ Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when conv
 Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
 
+## Limits
+1. Maximum number of name-value pairs: `180`.
+2. Maximum number of bytes per a single name-value pair: `4096`.
+3. Maximum total length of all name-value pairs: `8192`.
+
+## Example
+`key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue`
 
 # Examples of HTTP headers
 
