@@ -52,7 +52,7 @@ ASCII string according to the `token` format, defined in [[RFC2616], Section 2.2
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
-A value contains an URL encoded UTF-8 string.
+A value contains a URL encoded UTF-8 string.
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### property
@@ -65,20 +65,20 @@ Leading and trailing OWS is allowed but MUST be trimmed when converting the head
 Single header:
 
 ```
-baggage: userId=sergey,serverNode=DF:28,isProduction=false
+baggage: userId=alice,serverNode=DF:28,isProduction=false
 ```
 
 Context might be split into multiple headers:
 
 ```
-baggage: userId=sergey
+baggage: userId=alice
 baggage: serverNode=DF%3A28,isProduction=false
 ```
 
 Values and names might begin and end with spaces:
 
 ```
-baggage: userId =   sergey
+baggage: userId =   alice
 baggage: serverNode = DF%3A28, isProduction = false
 ```
 
@@ -91,7 +91,7 @@ baggage: serverNode=DF:28
 
 For example, if you need to log the original user ID when making transactions arbitrarily deep into a trace.
 ```
-baggage: userId=sergey
+baggage: userId=alice
 ```
 
 For example, if you have non-production requests that flow through the same services as production requests.

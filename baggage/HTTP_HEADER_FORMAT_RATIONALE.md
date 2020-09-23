@@ -7,7 +7,7 @@ This document provides a rationale for the decisions made for the `baggage` head
 - It should be human-readable. Cryptic headers would hide the fact of potential information disclosure.
 - It should be append-able (comma-separated) https://tools.ietf.org/html/rfc7230#page-24 so nodes
 can add context properties without parsing existing headers.
-- Keys are a single word in ASCII, and values should be a short string in UTF-8 or a derivative of an URL.
+- Keys are a single word in ASCII, and values should be a short string in UTF-8 or a derivative of a URL.
 
 ## Why a single header?
 
@@ -58,7 +58,7 @@ There are few considerations why the names should be case sensitive:
 While the semantics of header values are specific to the producer and consumer of a key/value pair, we
 concluded that string values should be encoded at the producer and decoded at the consumer and that the specification should define a mechanism for that.
 
-Url encoding is a low-overhead way to encode Unicode characters for non-Latin characters in the values. Url encoding keeps a single word in Latin unchanged and accessible.
+URL encoding is a low-overhead way to encode Unicode characters for non-Latin characters in the values. URL encoding keeps a single word in Latin unchanged and accessible.
 
 
 ## Limits
