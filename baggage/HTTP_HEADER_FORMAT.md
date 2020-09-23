@@ -31,8 +31,9 @@ value       =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 OWS         =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
 
-`token` is defined in [RFC2616, Section 2.2].
-The definition of `OWS` is taken from [RFC7230, Section 3.2.3].
+`token` is defined in [[!RFC2616]], Section 2.2: <https://tools.ietf.org/html/rfc2616#section-2.2>
+
+The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: <https://tools.ietf.org/html/rfc7230#section-3.2.3>
 
 ## Limits
 1. Maximum number of name-value pairs: `180`.
@@ -48,7 +49,7 @@ It can not be guaranteed that keys are unique.
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
 ### key
-ASCII string according to the `token` format, defined in [RFC2616, Section 2.2].
+ASCII string according to the `token` format, defined in [RFC2616, Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2).
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
 ### value
@@ -58,9 +59,6 @@ Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when conv
 ### property
 Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
-
-[RFC2616, Section 2.2]: https://tools.ietf.org/html/rfc2616#section-2.2
-[RFC7230, Section 3.2.3]: tools.ietf.org/html/rfc7230#section-3.2.3
 
 # Examples of HTTP headers
 
