@@ -3,7 +3,7 @@
 This repository is associated with the [baggage](https://w3c.github.io/baggage/) specification.
 
 Status of the report is
-[Editor Draft](https://www.w3.org/2017/Process-20170301/#working-draft).
+[First Public Working Draft](https://www.w3.org/2017/Process-20170301/#first-wd).
 
 See rationale
 [document](baggage/HTTP_HEADER_FORMAT_RATIONALE.md) for
