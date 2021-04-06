@@ -5,7 +5,7 @@ These practices help to avoid buffer overflow and HTML injection attacks.
 
 ## Information Exposure
 As mentioned in the privacy section, information in `baggage` may carry information that can be considered sensitive.
-Application owners should either ensure that no proprietary or confidential information is stored in `baggage`, or they should ensure that tracestate isn't present in requests that cross trust-boundaries.
+Application owners should either ensure that no proprietary or confidential information is stored in `baggage`, or they should ensure that `baggage` isn't present in requests that cross trust-boundaries.
 
 
 ## Other Risks
