@@ -41,6 +41,7 @@ The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.
 ### list
 List of key-value pairs with optional properties attached.
 It can not be guaranteed that keys are unique.
+The list order SHOULD be preserved when mutating the list.
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
 ### key
@@ -102,12 +103,12 @@ For example, if you have non-production requests that flow through the same serv
 baggage: isProduction=false
 ```
 # Mutating baggage
-A system receiving a `baggege` request header SHOULD send it to outgoing requests.
+A system receiving a `baggage` request header SHOULD send it to outgoing requests.
 A system MAY mutate the value of this header before passing it on.
 
 As the producer and consumer of `baggage` SHOULD be within the same logical system and the content of they
 key/value pairs is opaque to the spec, additional proprietary rules for mutations MAY be defined.
-Example: Requiring that the order should be preserved or defining a precedence when deduplicating keys.
+Example: Defining a precedence when deduplicating keys.
 
 The following mutations are allowed:
 
@@ -115,4 +116,3 @@ The following mutations are allowed:
 * **Update an existing value.** The value for any given key MAY be updated.
 * **Delete a key/value pair.** Any key/value pair MAY be deleted.
 * **Deduplicating the list.** Duplicate keys MAY be removed.
-* **Changing the list order.** The order of the list MAY be changed.
