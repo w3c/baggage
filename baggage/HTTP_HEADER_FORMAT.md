@@ -51,6 +51,9 @@ Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when conv
 A value contains a URL encoded UTF-8 string.
 Leading and trailing whitespaces (OWS) are allowed but MUST be trimmed when converting the header into a data structure.
 
+Note, `value` MAY contain any number of the equal sign (`=`) characters. Parsers
+MUST NOT assume that the equal sign is only used to separate `key` and `value`.
+
 ### property
 Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is opaque to this specification.
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
