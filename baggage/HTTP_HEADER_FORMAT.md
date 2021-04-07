@@ -106,7 +106,7 @@ baggage: isProduction=false
 A system receiving a `baggage` request header SHOULD send it to outgoing requests.
 A system MAY mutate the value of this header before passing it on.
 
-As the producer and consumer of `baggage` SHOULD be within the same logical system and the content of they
+As the producer and consumer of `baggage` SHOULD be within the same logical system and the content of the
 key/value pairs is opaque to the spec, additional proprietary rules for mutations MAY be defined.
 Example: Defining a precedence when deduplicating keys.
 
