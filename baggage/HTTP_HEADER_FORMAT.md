@@ -40,7 +40,7 @@ The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.
 
 ### baggage-string
 List of `list-member`s with optional properties attached.
-Uniqueness of keys between multiple `list-member`s in a baggagge-string is not guaranteed.
+Uniqueness of keys between multiple `list-member`s in a `baggage-string` is not guaranteed.
 Producers SHOULD try to produce a `baggage-string` without any `list-member`s which duplicate the `key` of another list member.
 
 ### key
