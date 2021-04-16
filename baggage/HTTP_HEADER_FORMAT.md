@@ -22,26 +22,26 @@ This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]]
 ## Definition
 
 ```ABNF
-list        =  list-member 0*179( OWS "," OWS list-member )
-list-member =  key OWS "=" OWS value *( OWS ";" OWS property )
-property    =  key OWS "=" OWS value
-property    =/ key OWS
-key         =  token ; as defined in RFC 2616, Section 2.2
-value       =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
-               ; US-ASCII characters excluding CTLs,
-               ; whitespace, DQUOTE, comma, semicolon,
-               ; and backslash
-OWS         =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
+baggage-string         =  list-member 0*179( OWS "," OWS list-member )
+list-member            =  key OWS "=" OWS value *( OWS ";" OWS property )
+property               =  key OWS "=" OWS value
+property               =/ key OWS
+key                    =  token ; as defined in RFC 2616, Section 2.2
+value                  =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+                          ; US-ASCII characters excluding CTLs,
+                          ; whitespace, DQUOTE, comma, semicolon,
+                          ; and backslash
+OWS                    =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
 
 `token` is defined in [[!RFC2616]], Section 2.2: https://tools.ietf.org/html/rfc2616#section-2.2
 
 The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.ietf.org/html/rfc7230#section-3.2.3
 
-### list
-List of key-value pairs with optional properties attached.
-It can not be guaranteed that keys are unique.
-Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
+### baggage-string
+List of `list-member`s with optional properties attached.
+Uniqueness of keys between multiple `list-member`s in a `baggage-string` is not guaranteed.
+Producers SHOULD try to produce a `baggage-string` without any `list-member`s which duplicate the `key` of another list member.
 
 ### key
 ASCII string according to the `token` format, defined in [RFC2616, Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2).
@@ -59,12 +59,26 @@ Additional metadata MAY be appended to values in the form of property set, repre
 Leading and trailing OWS is allowed but MUST be trimmed when converting the header into a data structure.
 
 ## Limits
-1. Maximum number of name-value pairs: `180`.
-2. Maximum number of bytes per a single name-value pair: `4096`.
-3. Maximum total length of all name-value pairs: `8192`.
+1. Maximum number of `list-member`s: `180`.
+2. Maximum number of bytes per `list-member`: `4096`.
+3. Maximum number of bytes per `baggage-string`: `8192`.
 
 ## Example
-`key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue`
+
+The following example header contains 3 `list-member`s.
+The `baggage-string` contained in the header contains 86 bytes.
+82 bytes come from the `list-member`s and 4 bytes come from commas and optional whitespace.
+
+```
+baggage: key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue
+```
+
+- `key1=value1;property1;property2`
+  - 31 bytes
+- `key2 = value2`
+  - 13 bytes
+- `key3=value3; propertyKey=propertyValue`
+  - 38 bytes
 
 # Examples of HTTP headers
 
