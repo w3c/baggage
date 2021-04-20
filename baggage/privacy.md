@@ -1,7 +1,7 @@
 # Privacy Considerations
 
 Requirements to propagate headers to downstream services, as well as storing values of these headers, open up potential privacy concerns.
-Using proprietary ways of context propagation, vendors and application developers could always encode information that contains user identifyable data.
+Using proprietary ways of context propagation, vendors and application developers could always encode information that contains user identifiable data.
 This standard makes it possible to operate on a known, standardized header to restrict propagation of baggage when trust boundaries are crossed.
 
 Systems MUST assess the risk of header abuse. This section provides some considerations and initial assessment of the risk associated with storing and propagating this header. Systems may choose to inspect and remove sensitive information from the fields before processing the received data. All mutations should, however, conform to the list of mutations defined in this specification.
