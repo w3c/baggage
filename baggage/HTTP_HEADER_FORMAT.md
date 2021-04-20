@@ -27,7 +27,8 @@ list-member            =  key OWS "=" OWS value *( OWS ";" OWS property )
 property               =  key OWS "=" OWS value
 property               =/ key OWS
 key                    =  token ; as defined in RFC 2616, Section 2.2
-value                  =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+value                  =  *baggage-octet
+baggage-octet          =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                           ; US-ASCII characters excluding CTLs,
                           ; whitespace, DQUOTE, comma, semicolon,
                           ; and backslash
