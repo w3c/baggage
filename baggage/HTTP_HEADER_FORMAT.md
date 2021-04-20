@@ -41,7 +41,7 @@ The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.
 ### list
 List of key-value pairs with optional properties attached.
 It can not be guaranteed that keys are unique.
-The order duplicate entries SHOULD be preserved when mutating the list.
+The order of duplicate entries SHOULD be preserved when mutating the list.
 Consumers MUST be able to handle duplicate keys while producers SHOULD try to deduplicate the list.
 
 ### key
