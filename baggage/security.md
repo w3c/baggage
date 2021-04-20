@@ -4,7 +4,7 @@ Systems relying on the `baggage` headers should also follow all best practices f
 These practices help to avoid buffer overflow, HTML injection, and other types of attacks.
 
 ## Information Exposure
-As mentioned in the privacy section, information in `baggage` may carry information that can be considered sensitive.
+As mentioned in the privacy section, `baggage` may carry sensitive information.
 Application owners should either ensure that no proprietary or confidential information is stored in `baggage`, or they should ensure that `baggage` isn't present in requests that cross trust-boundaries.
 
 
