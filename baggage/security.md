@@ -1,7 +1,7 @@
 # Security Considerations
 
 Systems relying on the `baggage` headers should also follow all best practices for parsing potentially malicious data, including checking for header length and content of header values.
-These practices help to avoid buffer overflow and HTML injection attacks.
+These practices help to avoid buffer overflow, HTML injection, and other types of attacks.
 
 ## Information Exposure
 As mentioned in the privacy section, information in `baggage` may carry information that can be considered sensitive.
