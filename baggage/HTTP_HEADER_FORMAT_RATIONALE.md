@@ -63,17 +63,6 @@ URL encoding is a low-overhead way to encode Unicode characters for non-Latin ch
 
 ## Limits
 
-The idea behind limits is to provide trace vendors standard safeguards so the content of the
-`baggage` header can be stored with the request. Thus the limits are defined on the
-number of keys, max pair length, and the total size. The total size limit is the most important for planning data storage requirements.
+Limits prevent processing, storage, and analysis of the header and its values from being overly burdensome. The overall size and number of `list-member`s is limited in order to place an upper limit on the  costs incurred processing and storing the header and its constituent values.
 
-Another consideration was that HTTP cookies provide a similar way to pass custom data via HTTP
-headers. So the limits should make the baggage name-value pairs fit the typical
-cookie limits.
-
-- *Maximum number of name-value pairs* - this limit was taken as a number of cookies allowed by
-Chrome.
-- *Maximum number of bytes per a single name-value pair* - the limit allows to store URL as a
-value with some extra details as a single context name-value pair. It is also a typical cookie
-size limitation.
-- *Maximum total length of all name-value pairs* - TODO: LOOKING FOR SUGGESTIONS HERE
+Limiting the size of each `list-member` prevents any single `list-member` from exhausting the header size limit and preventing other `list-member`s from being included. The maximum size of a `list-member` was chosen to allow a full URL to be stored with some additional metadata in a single `list-member`.
