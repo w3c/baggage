@@ -19,8 +19,11 @@ Baggage can be used to attribute infrastructure spend to a line of business. Whi
 ### Traffic prioritization / Quality of Service
 Baggage can be used by services to prioritize requests to provide better QoS. In a system, there can be different types of requests with different priorities: e.g., in ride sharing app, request for making a trip is more important than adding a location to favorites. As this request propagates through the system, this information can be lost in the lower shared layers. To solve this, we can assign tiers to different requests and pass it as part of baggage. In case of a traffic spike, the services can prioritize based on it.
 
-### Additional labels/annotations for Observability
-An APM agent can _read_ baggage entries and use them to create additional attributes or annotations for a span or metric that is being recorded. Note that APM agents should not _write_ to baggage to store any correlation data. They should instead use the tracestate header defined in the [W3C TraceContext](https://github.com/w3c/trace-context/blob/main/spec/20-http_request_header_format.md) specification.
+### Carrying routing instructions for requests during manual testing
+Baggage can be used to specify routing instructions for requests to control the behavior for manual testing. For example, a routing instruction could be: "when the request reaches service X, forward it to this specific service instance that I am running and debugging".
+
+### Carrying fault injection instructions for chaos engineering
+Baggage can be used to deliver fault injection instructions to services for chaos engineering. For example, an instruction could be to increase the latency of a specific service call or to fail a call. Using the baggage mechanism enables expressing and propagating targeted and non-trivial fault instructions to various components in the context of specific requests.
 
 ## HTTP Format
 The HTTP format is defined [here](HTTP_HEADER_FORMAT.md) and the rationale is defined
