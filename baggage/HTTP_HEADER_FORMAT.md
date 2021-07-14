@@ -113,7 +113,7 @@ For example, if all of your data needs to be sent to a single node, you could pr
 baggage: serverNode=DF:28
 ```
 
-For example, if you need to log the original user ID when making transactions arbitrarily deep into a trace.
+For example, if you need to log the original user ID when making transactions arbitrarily deep into a distributed request.
 
 ```
 baggage: userId=alice

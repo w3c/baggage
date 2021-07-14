@@ -63,7 +63,7 @@ URL encoding is a low-overhead way to encode Unicode characters for non-Latin ch
 
 ## Limits
 
-The idea behind limits is to provide trace vendors standard safeguards so the content of the
+The idea behind limits is to provide framework vendors standard safeguards so the content of the
 `baggage` header can be stored with the request. Thus the limits are defined on the
 number of keys, max pair length, and the total size. The total size limit is the most important for planning data storage requirements.
 
