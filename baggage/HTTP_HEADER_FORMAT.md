@@ -2,7 +2,7 @@
 
 The `baggage` header is a list of unordered key-value pairs with associated metadata.
 Multiple `baggage` headers are allowed.
-Values can be combined in a single header according to [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
+Multiple `baggage` headers MAY be combined in a single header according to [RFC 7230](https://tools.ietf.org/html/rfc7230#page-24).
 
 ## Header Name
 
