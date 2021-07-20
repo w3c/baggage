@@ -26,9 +26,9 @@ context](https://w3c.github.io/trace-context/) specification. Our goal
 is to share this with the community so that various tracing and
 diagnostics products can operate together.
 
-## Reference Implementations
+## Known Implementations
 
-OpenTelemetry provides a reference implementation of the baggage specification. You can find details at [OpenTelemetry API](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/baggage/api.md). OpenTelemetry SDK ships a BaggagePropagator and enables it by default. For example, the .NET version of it is [here](https://github.com/open-telemetry/opentelemetry-dotnet/blob/5ddf9a486e755c53ab73debf87286a934fcbbb51/src/OpenTelemetry.Api/Context/Propagation/BaggagePropagator.cs) and it is documented [here](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Api/README.md#baggage-api).
+OpenTelemetry provides an implementation of the baggage specification. You can find details at [OpenTelemetry API](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/baggage/api.md). OpenTelemetry SDK ships a BaggagePropagator and enables it by default. For example, the .NET version of it is [here](https://github.com/open-telemetry/opentelemetry-dotnet/blob/5ddf9a486e755c53ab73debf87286a934fcbbb51/src/OpenTelemetry.Api/Context/Propagation/BaggagePropagator.cs) and it is documented [here](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Api/README.md#baggage-api).
 
 Another system that supports the baggage concept is .NET. It supports it as part of the [System.Diagnostics.Activity class](https://github.com/dotnet/corefx/blob/master/src/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Activity.cs) and it is documented [here](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.activity?view=net-5.0). However, it is not a strict reference implementation: for example, it doesn't enforce the same character set or limits.
 
