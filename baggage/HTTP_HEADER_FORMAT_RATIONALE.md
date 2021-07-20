@@ -63,6 +63,6 @@ URL encoding is a low-overhead way to encode Unicode characters for non-Latin ch
 
 ## Limits
 
-Limits prevent processing, storage, and analysis of the header and its values from being overly burdensome. The overall size and number of `list-member`s is limited in order to place an upper limit on the  costs incurred processing and storing the header and its constituent values.
+Limits prevent processing, storage, and analysis of the header and its values from being overly burdensome. The overall size and number of list members is limited in order to place an upper limit on the costs incurred processing and storing the header and its constituent values.
 
-Limiting the size of each `list-member` prevents any single `list-member` from exhausting the header size limit and preventing other `list-member`s from being included. The maximum size of a `list-member` was chosen to allow a full URL to be stored with some additional metadata in a single `list-member`.
+Limiting the size of each key-value pair prevents any single value from exhausting the header size limit and preventing other values from being included. The maximum size of a key-value pair was chosen to allow a full URL to be stored with some additional metadata.
