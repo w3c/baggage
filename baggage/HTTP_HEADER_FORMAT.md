@@ -40,6 +40,7 @@ The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.
 
 List of `list-member`s with optional properties attached.
 Uniqueness of keys between multiple `list-member`s in a `baggage-string` is not guaranteed.
+The order of duplicate entries SHOULD be preserved when mutating the list.
 Producers SHOULD try to produce a `baggage-string` without any `list-member`s which duplicate the `key` of another list member.
 
 #### key
@@ -124,3 +125,15 @@ For example, if you have non-production requests that flow through the same serv
 ```
 baggage: isProduction=false
 ```
+# Mutating baggage
+A system receiving a `baggage` request header SHOULD send it to outgoing requests.
+A system MAY mutate the value of this header before passing it on.
+
+Because baggage entry keys, values, and metadata are not specified here, producers and consumers MAY agree on any set of mutation rules that don't violate the specification. For example, keys may be deduplicated by keeping the first entry, keeping the last entry, or concatenating values together.
+
+The following mutations are allowed:
+
+* **Add a new key/value pair.** A key/value pair MAY be added.
+* **Update an existing value.** The value for any given key MAY be updated.
+* **Delete a key/value pair.** Any key/value pair MAY be deleted.
+* **Deduplicating the list.** Duplicate keys MAY be removed.
