@@ -114,7 +114,7 @@ For example, if all of your data needs to be sent to a single node, you could pr
 baggage: serverNode=DF:28
 ```
 
-For example, if you need to annotate logs with some request- specific information, you could propagate a property using the baggage header.
+For example, if you need to annotate logs with some request-specific information, you could propagate a property using the baggage header.
 
 ```
 baggage: userId=alice
