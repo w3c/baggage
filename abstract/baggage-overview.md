@@ -1,3 +1,3 @@
 # Overview
 
-The `baggage` header represents user-defined baggage associated with a trace. Libraries and platforms SHOULD propagate this header.
+The `baggage` header represents a set of user-defined properties associated with a distributed request. Libraries and platforms SHOULD propagate this header.
