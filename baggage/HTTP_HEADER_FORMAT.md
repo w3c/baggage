@@ -86,24 +86,26 @@ baggage: key1=value1;property1;property2, key2 = value2, key3=value3; propertyKe
 
 ## Examples of HTTP headers
 
+When propagating the entries (userId, alice), (serverNode, DF 28), (isProduction, false),
+
 Single header:
 
 ```
-baggage: userId=alice,serverNode=DF%3A28,isProduction=false
+baggage: userId=alice,serverNode=DF%2028,isProduction=false
 ```
 
 Context might be split into multiple headers:
 
 ```
 baggage: userId=alice
-baggage: serverNode=DF%3A28,isProduction=false
+baggage: serverNode=DF%2028,isProduction=false
 ```
 
 Values and names might begin and end with spaces:
 
 ```
 baggage: userId =   alice
-baggage: serverNode = DF%3A28, isProduction = false
+baggage: serverNode = DF%2028, isProduction = false
 ```
 
 ### Example use case
@@ -111,7 +113,7 @@ baggage: serverNode = DF%3A28, isProduction = false
 For example, if all of your data needs to be sent to a single node, you could propagate a property indicating that.
 
 ```
-baggage: serverNode=DF:28
+baggage: serverNode=DF%2028
 ```
 
 For example, if you need to annotate logs with some request-specific information, you could propagate a property using the baggage header.
