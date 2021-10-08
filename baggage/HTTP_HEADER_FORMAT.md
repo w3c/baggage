@@ -86,7 +86,7 @@ baggage: key1=value1;property1;property2, key2 = value2, key3=value3; propertyKe
 
 ## Examples of HTTP headers
 
-When propagating the entries (userId, alice), (serverNode, DF 28), (isProduction, false),
+Assume we want to propagate these entries: `userId="alice"`, `serverNode="DF 28"`, `isProduction=false`,
 
 Single header:
 
