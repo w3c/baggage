@@ -89,7 +89,7 @@ baggage: key1=value1;property1;property2, key2 = value2, key3=value3; propertyKe
 Single header:
 
 ```
-baggage: userId=alice,serverNode=DF:28,isProduction=false
+baggage: userId=alice,serverNode=DF%3A28,isProduction=false
 ```
 
 Context might be split into multiple headers:
