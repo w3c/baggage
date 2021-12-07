@@ -137,3 +137,7 @@ The following mutations are allowed:
 * **Update an existing value.** The value for any given key MAY be updated.
 * **Delete a key/value pair.** Any key/value pair MAY be deleted.
 * **Deduplicating the list.** Duplicate keys MAY be removed.
+
+If a system receiving or updating a `baggage` request header determines that the number of baggage entries exceeds the limit defined in the limits section above, it MAY drop or truncate certain baggage entries in any order chosen by the implementation.
+
+If a system determines that the value of a baggage entry is not in the format defined in this specification, it MAY remove that entry before propagating the baggage header as part of outgoing requests.
