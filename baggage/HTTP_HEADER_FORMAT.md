@@ -23,7 +23,7 @@ baggage-string         =  list-member 0*179( OWS "," OWS list-member )
 list-member            =  key OWS "=" OWS value *( OWS ";" OWS property )
 property               =  key OWS "=" OWS value
 property               =/ key OWS
-key                    =  token ; as defined in RFC 2616, Section 2.2
+key                    =  token ; as defined in RFC 7230, Section 3.2.6
 value                  =  *baggage-octet
 baggage-octet          =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                           ; US-ASCII characters excluding CTLs,
@@ -32,7 +32,7 @@ baggage-octet          =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 OWS                    =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
 
-`token` is defined in [[!RFC2616]], Section 2.2: https://tools.ietf.org/html/rfc2616#section-2.2
+`token` is defined in [[!RFC7230]], Section 3.2.6: https://tools.ietf.org/html/rfc7230#section-3.2.6
 
 The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.ietf.org/html/rfc7230#section-3.2.3
 
@@ -45,7 +45,7 @@ Producers SHOULD try to produce a `baggage-string` without any `list-member`s wh
 
 #### key
 
-ASCII string according to the `token` format, defined in [RFC2616, Section 2.2](https://tools.ietf.org/html/rfc2616#section-2.2).
+A `token` which identifies a `value` in the `baggage`. `token` is defined in [RFC7230, Section 3.2.6](https://tools.ietf.org/html/rfc7230#section-3.2.6).
 Leading and trailing whitespaces (`OWS`) are allowed but MUST be trimmed when converting the header into a data structure.
 
 #### value
