@@ -123,12 +123,20 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.property_key, None)
         self.assertEqual(entry.property_value, None)
 
+    def test_parse_multiple_equals(self):
+        entry = BaggageEntry.from_string("SomeKey=SomeValue=equals")
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "SomeValue=equals")
+        self.assertEqual(entry.property_key, None)
+        self.assertEqual(entry.property_value, None)
+
     def test_parse_percent_encoded(self):
         value = "\t \"\';=asdf!@#$%^&*()"
         encoded_value = urllib.parse.quote(value)
         entry = BaggageEntry.from_string("SomeKey=%s" % (encoded_value))
         self.assertEqual(entry.key, "SomeKey")
         self.assertEqual(entry.value, value)
+        self.assertEqual(entry.to_string(), "SomeKey=%09%20%22%27%3B%3Dasdf%21%40%23%24%25%5E%26%2A%28%29")
 
     def test_parse_property(self):
         entry = BaggageEntry.from_string("SomeKey=SomeValue;SomeProp")
@@ -176,6 +184,21 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.property_key, "SomePropKey")
         self.assertEqual(entry.property_value, "SomePropValue")
 
+# TODO update this when limits change to a minimum not a maximum
+class LimitsTest(unittest.TestCase):
+    def test_serialize_too_many_pairs(self):
+        '''limit 180 entries'''
+        baggage = Baggage([BaggageEntry("key%s" % x, "value") for x in range(200)])
+        baggage_str = baggage.to_string()
+        entry_strs = baggage_str.split(",")
+        self.assertEqual(len(entry_strs), 180)
+
+    def test_serialize_long_header(self):
+        '''limit 4096 bytes'''
+        long_value = '01234567890123456789'
+        baggage = Baggage([BaggageEntry("key%s" % x, long_value) for x in range(200)])
+        baggage_str = baggage.to_string()
+        self.assertLessEqual(len(baggage_str), 4096)
 
 if __name__ == '__main__':
     unittest.main()

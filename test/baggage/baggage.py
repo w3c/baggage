@@ -7,6 +7,8 @@ from urllib.parse import quote, unquote
 class Baggage(object):
     '''baggage regular expression reference implementation'''
     _DELIMITER_FORMAT_RE = re.compile('[ \t]*,[ \t]*')
+    _ENTRY_COUNT_LIMIT = 180
+    _BYTES_LIMIT = 4096
     entries: list[BaggageEntry] = []
 
     def __init__(self, entries: list[BaggageEntry] | None = None):
@@ -24,8 +26,22 @@ class Baggage(object):
         return Baggage([BaggageEntry.from_string(s) for s in value])
 
     def to_string(self) -> str:
-        '''serialize a Baggage class into an HTML header string'''
-        return ",".join([x.to_string() for x in self.entries])
+        '''
+        Serialize a Baggage class into an HTML header string
+
+        Only the first 180 entries will be serialized even if more than 180 entries exist in the list.
+        Entries will only be included until the limit of 4096 bytes is reached.
+        '''
+        out = ""
+        for i, entry in enumerate(self.entries[:Baggage._ENTRY_COUNT_LIMIT]):
+            entry_str = entry.to_string()
+            if len(out) + len(entry_str) + 1 > 4096:
+                return out
+            if i > 0:
+                out += ","
+            out += entry_str
+
+        return out
 
 
 class BaggageEntry(object):
