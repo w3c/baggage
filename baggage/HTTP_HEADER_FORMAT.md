@@ -63,9 +63,11 @@ Leading and trailing `OWS` is allowed but MUST be trimmed when converting the he
 
 ### Limits
 
-1. Maximum number of `list-member`s: `180`.
-2. Maximum number of bytes per `list-member`: `4096`.
-3. Maximum number of bytes per `baggage-string`: `8192`.
+Note that the following limits are _minimum_ requirements to comply with the specification.
+An implementor or platform MAY define higher limits and SHOULD propagate as much baggage information as is reasonable within their requirements.
+
+1. A platform MUST propagate _at least_ 64 `list-member`s.
+2. A platform MUST propagate a `baggage-string` of _at least_ 8192 bytes.
 
 ### Example
 
