@@ -8,7 +8,8 @@ class Baggage(object):
     '''baggage regular expression reference implementation'''
     _DELIMITER_FORMAT_RE = re.compile('[ \t]*,[ \t]*')
     _ENTRY_COUNT_LIMIT = 180
-    _BYTES_LIMIT = 4096
+    _BYTES_LIMIT = 8192
+    _ENTRY_SIZE_LIMIT = 4096
     entries: list[BaggageEntry] = []
 
     def __init__(self, entries: list[BaggageEntry] | None = None):
@@ -30,13 +31,22 @@ class Baggage(object):
         Serialize a Baggage class into an HTML header string
 
         Only the first 180 entries will be serialized even if more than 180 entries exist in the list.
-        Entries will only be included until the limit of 4096 bytes is reached.
+        Entries will only be included until the limit of 8192 bytes is reached.
+        Entries which serialize longer than the 4096 byte limit per entry are skipped.
         '''
         out = ""
         for i, entry in enumerate(self.entries[:Baggage._ENTRY_COUNT_LIMIT]):
             entry_str = entry.to_string()
-            if len(out) + len(entry_str) + 1 > 4096:
+
+            # Skip entries that are too long
+            if len(entry_str) > Baggage._ENTRY_SIZE_LIMIT:
+                continue
+
+            # If the total length limit is reached (including delimiters) we are done
+            if len(out) + len(entry_str) + 1 > Baggage._BYTES_LIMIT:
                 return out
+
+            # Prepend delimiter on all but the first entry
             if i > 0:
                 out += ","
             out += entry_str
