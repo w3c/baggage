@@ -58,7 +58,8 @@ MUST NOT assume that the equal sign is only used to separate `key` and `value`.
 
 #### property
 
-Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. The semantic of such properties is <a>opaque</a> to this specification.
+Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`.
+Property keys and values are given no specific meaning by this specification.
 Leading and trailing `OWS` is allowed but MUST be trimmed when converting the header into a data structure.
 
 ### Limits
