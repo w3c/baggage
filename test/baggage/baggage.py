@@ -9,7 +9,7 @@ class Baggage(object):
     _DELIMITER_FORMAT_RE = re.compile('[ \t]*,[ \t]*')
     entries: list[BaggageEntry] = []
 
-    def __init__(self, entries: list[BaggageEntry] | None=None):
+    def __init__(self, entries: list[BaggageEntry] | None = None):
         if entries is not None:
             self.entries = entries
 
@@ -39,9 +39,11 @@ class BaggageEntry(object):
     _KV_FORMAT = r'(%s)[ \t]*=[ \t]*(%s)' % (_KEY_FORMAT, _VALUE_FORMAT)
     # list-member = key OWS "=" OWS value *( OWS ";" OWS property )
     _ENTRY_FORMAT_RE = re.compile(
-        r'^%s[ \t]*(?:;[ \t]*(%s|%s))?$' % (_KV_FORMAT, _KV_FORMAT, _KEY_FORMAT))
+        r'^%s[ \t]*(?:;[ \t]*(%s|%s))?$' % (_KV_FORMAT,
+                                            _KV_FORMAT,
+                                            _KEY_FORMAT))
 
-    def __init__(self, key: str, value: str, property_key: str | None=None, property_value: str | None=None):
+    def __init__(self, key: str, value: str, property_key: str | None = None, property_value: str | None = None):
         self.key = key
         self.value = value
         self.property_key = property_key

@@ -3,6 +3,7 @@ import urllib.parse
 
 from baggage import Baggage, BaggageEntry
 
+
 class BaggageTest(unittest.TestCase):
     def test_ctor_default(self):
         baggage = Baggage()
@@ -16,7 +17,7 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(entry.value, "SomeValue")
         self.assertEqual(entry.property_key, None)
         self.assertEqual(entry.property_value, None)
-    
+
     def test_parse_multiple(self):
         baggage = Baggage().from_string("SomeKey=SomeValue,SomeKey2=SomeValue2")
         self.assertEqual(len(baggage.entries), 2)
@@ -32,7 +33,8 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(entry2.property_value, None)
 
     def test_parse_multiple_ows(self):
-        baggage = Baggage().from_string("SomeKey \t = \t SomeValue \t , \t SomeKey2 \t = \t SomeValue2 \t ")
+        baggage = Baggage().from_string(
+            "SomeKey \t = \t SomeValue \t , \t SomeKey2 \t = \t SomeValue2 \t ")
         self.assertEqual(len(baggage.entries), 2)
         entry1 = baggage.entries[0]
         entry2 = baggage.entries[1]
@@ -44,9 +46,10 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(entry2.value, "SomeValue2")
         self.assertEqual(entry2.property_key, None)
         self.assertEqual(entry2.property_value, None)
-    
+
     def test_parse_multiple_property(self):
-        baggage = Baggage().from_string("SomeKey=SomeValue;SomeProp,SomeKey2=SomeValue2;SomeProp2")
+        baggage = Baggage().from_string(
+            "SomeKey=SomeValue;SomeProp,SomeKey2=SomeValue2;SomeProp2")
         self.assertEqual(len(baggage.entries), 2)
         entry1 = baggage.entries[0]
         entry2 = baggage.entries[1]
@@ -60,7 +63,8 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(entry2.property_value, None)
 
     def test_parse_multiple_property_ows(self):
-        baggage = Baggage().from_string("SomeKey \t = \t SomeValue \t ; \t SomeProp \t , \t SomeKey2 \t = \t SomeValue2 \t ; \t SomeProp2")
+        baggage = Baggage().from_string(
+            "SomeKey \t = \t SomeValue \t ; \t SomeProp \t , \t SomeKey2 \t = \t SomeValue2 \t ; \t SomeProp2")
         self.assertEqual(len(baggage.entries), 2)
         entry1 = baggage.entries[0]
         entry2 = baggage.entries[1]
@@ -72,9 +76,10 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(entry2.value, "SomeValue2")
         self.assertEqual(entry2.property_key, "SomeProp2")
         self.assertEqual(entry2.property_value, None)
-    
+
     def test_parse_multiple_kv_property(self):
-        baggage = Baggage().from_string("SomeKey=SomeValue;SomePropKey=SomePropValue,SomeKey2=SomeValue2;SomePropKey2=SomePropValue2")
+        baggage = Baggage().from_string(
+            "SomeKey=SomeValue;SomePropKey=SomePropValue,SomeKey2=SomeValue2;SomePropKey2=SomePropValue2")
         self.assertEqual(len(baggage.entries), 2)
         entry1 = baggage.entries[0]
         entry2 = baggage.entries[1]
@@ -88,7 +93,8 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(entry2.property_value, "SomePropValue2")
 
     def test_parse_multiple_kv_property_ows(self):
-        baggage = Baggage().from_string("SomeKey \t = \t SomeValue \t ; \t SomePropKey=SomePropValue \t , \t SomeKey2 \t = \t SomeValue2 \t ; \t SomePropKey2 \t = \t SomePropValue2")
+        baggage = Baggage().from_string(
+            "SomeKey \t = \t SomeValue \t ; \t SomePropKey=SomePropValue \t , \t SomeKey2 \t = \t SomeValue2 \t ; \t SomePropKey2 \t = \t SomePropValue2")
         self.assertEqual(len(baggage.entries), 2)
         entry1 = baggage.entries[0]
         entry2 = baggage.entries[1]
@@ -100,6 +106,7 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(entry2.value, "SomeValue2")
         self.assertEqual(entry2.property_key, "SomePropKey2")
         self.assertEqual(entry2.property_value, "SomePropValue2")
+
 
 class BaggageEntryTest(unittest.TestCase):
     def test_ctor_default(self):
@@ -131,7 +138,8 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.property_value, None)
 
     def test_parse_kv_property(self):
-        entry = BaggageEntry.from_string("SomeKey=SomeValue;SomePropKey=SomePropValue")
+        entry = BaggageEntry.from_string(
+            "SomeKey=SomeValue;SomePropKey=SomePropValue")
         self.assertEqual(entry.key, "SomeKey")
         self.assertEqual(entry.value, "SomeValue")
         self.assertEqual(entry.property_key, "SomePropKey")
@@ -144,28 +152,30 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.property_key, None)
         self.assertEqual(entry.property_value, None)
 
-
     def test_parse_percent_encoded_ows(self):
         value = "\t \"\';=asdf!@#$%^&*()"
         encoded_value = urllib.parse.quote(value)
-        entry = BaggageEntry.from_string("SomeKey \t = \t %s \t " % (encoded_value))
+        entry = BaggageEntry.from_string(
+            "SomeKey \t = \t %s \t " % (encoded_value))
         self.assertEqual(entry.key, "SomeKey")
         self.assertEqual(entry.value, value)
 
     def test_parse_property_ows(self):
-        entry = BaggageEntry.from_string("SomeKey \t = \t SomeValue \t ; \t SomeProp")
+        entry = BaggageEntry.from_string(
+            "SomeKey \t = \t SomeValue \t ; \t SomeProp")
         self.assertEqual(entry.key, "SomeKey")
         self.assertEqual(entry.value, "SomeValue")
         self.assertEqual(entry.property_key, "SomeProp")
         self.assertEqual(entry.property_value, None)
 
-
     def test_parse_kv_property_ows(self):
-        entry = BaggageEntry.from_string("SomeKey \t = \t SomeValue \t ; \t SomePropKey \t = \t SomePropValue")
+        entry = BaggageEntry.from_string(
+            "SomeKey \t = \t SomeValue \t ; \t SomePropKey \t = \t SomePropValue")
         self.assertEqual(entry.key, "SomeKey")
         self.assertEqual(entry.value, "SomeValue")
         self.assertEqual(entry.property_key, "SomePropKey")
         self.assertEqual(entry.property_value, "SomePropValue")
+
 
 if __name__ == '__main__':
     unittest.main()
