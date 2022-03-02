@@ -62,18 +62,17 @@ class BaggageEntry(object):
     #  baggage-octet = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
     #  value = *baggage-octet
     _VALUE_FORMAT = r'[\x23-\x2b\x2d-\x3a\x3c-\x5b\x5d-\x7e\x21]*'
-    _KV_FORMAT = r'(%s)[ \t]*=[ \t]*(%s)' % (_KEY_FORMAT, _VALUE_FORMAT)
-    # list-member = key OWS "=" OWS value *( OWS ";" OWS property )
-    _ENTRY_FORMAT_RE = re.compile(
-        r'^%s[ \t]*(?:;[ \t]*(%s|%s))?$' % (_KV_FORMAT,
-                                            _KV_FORMAT,
-                                            _KEY_FORMAT))
 
-    def __init__(self, key: str, value: str, property_key: str | None = None, property_value: str | None = None):
+    # list-member = key OWS "=" OWS value *( OWS ";" OWS property )
+    _DELIMITER_FORMAT_RE = re.compile(r'[ \t]*;[ \t]*')
+    _KV_FORMAT_RE = re.compile(
+        r'^(%s)[ \t]*=[ \t]*(%s)$' % (_KEY_FORMAT, _VALUE_FORMAT))
+    _KEY_RE = re.compile(r'^%s$' % _KEY_FORMAT)
+
+    def __init__(self, key: str, value: str, properties: list[BaggageEntryProperty] = None):
         self.key = key
         self.value = value
-        self.property_key = property_key
-        self.property_value = property_value
+        self.properties = properties or []
 
     @classmethod
     def from_string(cls, value: str) -> BaggageEntry:
@@ -81,23 +80,47 @@ class BaggageEntry(object):
         if not isinstance(value, str):
             raise ValueError('value must be a string')
 
-        match = re.match(BaggageEntry._ENTRY_FORMAT_RE, value)
-        if match is None:
-            raise ValueError('failed to parse baggage entry \'%s\'' % (value))
+        split_strs = re.split(BaggageEntry._DELIMITER_FORMAT_RE, value)
+        kv = split_strs[0]
+        property_strs = split_strs[1:]
 
-        key = match[1]
-        value = match[2]
-        property_key = match[3]
-        if match[4] is not None:
-            property_key = match[4]
-        property_value = match[5]
+        kv_match = re.match(BaggageEntry._KV_FORMAT_RE, kv.rstrip(" \t"))
 
-        return cls(key, unquote(value), property_key, property_value)
+        if kv_match is None:
+            raise ValueError('failed to parse baggage entry key-value pair \'%s\'' % kv)
+
+        key, value = kv_match[1], kv_match[2]
+
+        properties = []
+
+        for s in property_strs:
+            key_match = re.match(BaggageEntry._KEY_RE, s)
+            kv_match = re.match(BaggageEntry._KV_FORMAT_RE, s)
+            if key_match is not None:
+                properties.append(BaggageEntryProperty(s))
+            elif kv_match is not None:
+                properties.append(BaggageEntryProperty(
+                    kv_match[1], kv_match[2]))
+            else:
+                raise ValueError('property %s could not be parsed')
+
+        return cls(key, unquote(value), properties)
 
     def to_string(self) -> str:
         '''serialize a BaggageEntry class into a string'''
-        if self.property_key is not None:
-            if self.property_value is not None:
-                return "%s=%s;%s=%s" % (self.key, quote(self.value), self.property_key, self.property_value)
-            return "%s=%s;%s" % (self.key, quote(self.value), self.property_key)
-        return "%s=%s" % (self.key, quote(self.value))
+        s = "%s=%s" % (self.key, quote(self.value))
+        for prop in self.properties:
+            s += ";%s" % prop.to_string()
+        return s
+
+
+class BaggageEntryProperty(object):
+    def __init__(self, key: str, value: str = None) -> None:
+        self.key = key
+        self.value = value
+
+    def to_string(self):
+        if self.value is None:
+            return self.key
+
+        return '%s=%s' % (self.key, self.value)
