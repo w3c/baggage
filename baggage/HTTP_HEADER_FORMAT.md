@@ -50,7 +50,9 @@ Leading and trailing whitespaces (`OWS`) are allowed but MUST be trimmed when co
 
 #### value
 
-A value contains a URL encoded UTF-8 string.
+A value contains UTF-8 encoded string.
+Any characters outside of the `baggage-octet` ranges of characters MUST be percent-encoded.
+Percent-encoding is defined in [[RFC3986]], Section 2.1: https://datatracker.ietf.org/doc/html/rfc3986#section-2.1.
 Leading and trailing whitespaces (`OWS`) are allowed but MUST be trimmed when converting the header into a data structure.
 
 Note, `value` MAY contain any number of the equal sign (`=`) characters. Parsers
