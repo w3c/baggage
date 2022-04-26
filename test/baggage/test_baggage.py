@@ -183,39 +183,35 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.properties[0].key, "SomePropKey")
         self.assertEqual(entry.properties[0].value, "SomePropValue")
 
-# TODO update this when limits change to a minimum not a maximum
-
 
 class LimitsTest(unittest.TestCase):
-    def test_serialize_too_many_entries(self):
-        '''limit 180 entries'''
+    def test_serialize_at_least_64(self):
+        '''A platform MUST propagate all list-members up to at least 64 list-members including any list-members added by the platform.'''
         baggage = Baggage([BaggageEntry("key%s" % x, "value")
-                          for x in range(200)])
+                          for x in range(64)])
         baggage_str = baggage.to_string()
         entry_strs = baggage_str.split(",")
-        self.assertEqual(len(entry_strs), 180)
+        self.assertEqual(len(entry_strs), 64)
 
     def test_serialize_long_entry(self):
-        long_value = '01234567890' * 500
-        baggage = Baggage([
-            BaggageEntry("key1", "short_value"),
-            BaggageEntry("key2", long_value),
-            BaggageEntry("key3", "short_value_again"),
-        ])
+        '''A platform MUST propagate all list-members including any list-members added by the platform if the resulting baggage-string would be 8192 bytes or less.'''
+        long_value = '0123456789' * 819
+        baggage = Baggage([BaggageEntry("a", long_value)])
+        # a 1 character
+        # = 1 character
+        # 0123456789 10 characters * 819 = 8190 characters
+        # total 8192 characters
         baggage_str = baggage.to_string()
-        self.assertEqual(
-            baggage_str, "key1=short_value,key3=short_value_again")
+        self.assertEqual(len(baggage_str), 8192)
 
-    def test_serialize_long_header(self):
-        '''limit 8192 bytes'''
-        long_value = '012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'
-        baggage = Baggage([BaggageEntry("key%s" % x, long_value)
-                          for x in range(100)])
-        baggage_str = baggage.to_string()
-        # ensure not all entries were serialized
-        self.assertLess(len(baggage_str.split(",")), 100)
-        self.assertLessEqual(len(baggage_str), 8192)
+    def test_serialize_many_entries(self):
+        # 512 entries with 15 bytes + 1 trailing comma
+        baggage = Baggage(
+            [BaggageEntry("{:03d}".format(x), '0123456789a') for x in range(512)])
 
+        # last entry is 16 bytes
+        baggage_str = baggage.to_string() + 'b'
+        self.assertEqual(len(baggage_str), 8192)
 
 if __name__ == '__main__':
     unittest.main()
