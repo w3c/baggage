@@ -1,6 +1,6 @@
 # Contributing into baggage
 
-This repository is being used for work in the [W3C Distributed Trace Context Working Group](https://www.w3.org/2018/distributed-tracing/).
+This repository is being used for work in the [W3C Distributed Tracing Working Group](https://www.w3.org/2018/distributed-tracing/).
 
 Contributions to this repository are intended to become part of Recommendation-track documents governed by the
 [W3C Patent Policy](https://www.w3.org/Consortium/Patent-Policy/) and
