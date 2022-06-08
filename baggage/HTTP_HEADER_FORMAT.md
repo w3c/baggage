@@ -107,6 +107,12 @@ Single header:
 baggage: userId=alice,serverNode=DF%2028,isProduction=false
 ```
 
+Here is one more example where values with characters outside of the `baggage-octet` range of characters are percent-encoded. Consider the entry: `userId="Amélie"`, `serverNode="DF 28"`, `isProduction=false`:
+
+```
+baggage: userId=Am%C3%A9lie,serverNode=DF%2028,isProduction=false
+```
+
 Context might be split into multiple headers:
 
 ```
