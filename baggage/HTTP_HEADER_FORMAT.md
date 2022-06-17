@@ -50,7 +50,7 @@ Leading and trailing whitespaces (`OWS`) are allowed and are not considered to b
 
 #### value
 
-A value contains a string whose character encoding MUST be UTF-8 [Encoding].
+A value contains a string whose character encoding MUST be UTF-8 [[Encoding]].
 Any characters outside of the `baggage-octet` range of characters MUST be percent-encoded.
 Characters which are not required to be percent-encoded MAY be percent-encoded.
 Percent-encoding is defined in [[RFC3986]], Section 2.1: https://datatracker.ietf.org/doc/html/rfc3986#section-2.1.
