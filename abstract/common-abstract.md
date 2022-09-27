@@ -1,1 +1,3 @@
-This specification defines a standard for representing and propagating a set of user-defined properties associated with a distributed request.
+This specification defines a standard for representing and propagating a set of application-defined properties associated with a distributed request.
+
+This is independent of the [Trace Context](https://www.w3.org/TR/trace-context/) specification. This can be used independent of whether Distributed Tracing is used. This standardizes representing and propagating application-defined properties. In contrast, Trace Context standardizes representing and propagating the trace context needed to enable Distributed Tracing scenarios.
