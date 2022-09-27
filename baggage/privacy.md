@@ -11,4 +11,4 @@ Systems MUST assess the risk of header abuse. This section provides some conside
 The main purpose of this header is to provide additional system-specific information to other systems within the same trust-boundary.
 The `baggage` header may contain any value in any of the keys.
 As such, the `baggage` header can contain user-identifiable data, however no key or its value or properties is given semantic meaning by this specification.
-Applications using baggage should be aware that, when they use baggage, the keys and values can be propagated to other systems. Hence, they should remove any private information that they don't want to be propagated to other systems. If applications decide to retain any sensitive information, they should ensure that the channel used to transport such data is secured.
+Applications using baggage should be aware that the keys and values can be propagated to other systems. Hence, they should remove any private information that they don't want to be propagated to other systems.
