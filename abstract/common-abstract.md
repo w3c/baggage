@@ -1,1 +1,3 @@
-This specification defines a standard for representing and propagating a set of user-defined properties associated with a distributed request.
+This specification defines a standard for representing and propagating a set of application-defined properties associated with a distributed request or workflow execution.
+
+This is independent of the [Trace Context](https://www.w3.org/TR/trace-context/) specification. Baggage can be used regardless of whether Distributed Tracing is used. This specification standardizes representation and propagation of application-defined properties. In contrast, Trace Context specification standardizes representation and propagation of the metadata needed to enable Distributed Tracing scenarios.
