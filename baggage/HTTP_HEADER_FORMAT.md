@@ -75,10 +75,9 @@ An implementor or platform MAY define higher limits and SHOULD propagate as much
 If a platform cannot propagate all baggage, it MUST NOT propagate any partial `list-member`s.
 If there are multiple `baggage` headers, all limits apply to the combination of all `baggage` headers and not each header individually.
 
-1. A platform MUST propagate all `list-member`s up to _at least_ 64 `list-member`s including any `list-member`s added by the platform.
-2. A platform MUST propagate all `list-member`s including any `list-member`s added by the platform if the resulting `baggage-string` would be 8192 bytes or less. If the resulting `baggage-string` would be greater than 8192 bytes, some `list-member`s MAY be dropped until the resulting `baggage-string` is 8192 characters or less.
-
-If a platform does not propagate all `list-member`s, it is left to the implementer to decide which `list-member`s to propagate.
+1. A platform MUST propagate all `list-member`s up to _at least_ 64 `list-member`s including any `list-member`s added by the platform, unless (2) is violated.
+2. A platform MUST propagate all `list-member`s including any `list-member`s added by the platform if the resulting `baggage-string` would be 8192 bytes or less. If the resulting `baggage-string` would be greater than 8192 bytes, some `list-member`s MAY be dropped until the resulting `baggage-string` is 8192 characters or less, unless (1) is violated.
+3. If either (1) or (2) is violated, the platform MAY drop `list-member`s at its own discretion. If a platform does not propagate all `list-member`s, it is left to the implementer to decide which `list-member`s to propagate.
 
 ### Example
 
