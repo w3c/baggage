@@ -70,11 +70,6 @@ Leading and trailing `OWS` is allowed and is not considered to be a part of the 
 
 ### Limits
 
-Note that the following limits are _minimum_ requirements to comply with the specification.
-An implementor or platform MAY define higher limits and SHOULD propagate as much baggage information as is reasonable within their requirements.
-If a platform cannot propagate all baggage, it MUST NOT propagate any partial `list-member`s.
-If there are multiple `baggage` headers, all limits apply to the combination of all `baggage` headers and not each header individually.
-
 A platform MUST propagate all `list-member`s including any `list-member`s added by the platform whenever both of these conditions are met:
 
 - **Condition 1:** The resulting `baggage-string` contains 64 `list-member`s or less.
@@ -82,6 +77,10 @@ A platform MUST propagate all `list-member`s including any `list-member`s added 
 
 If either of the above conditions is not met, a platform MAY drop `list-member`s until both conditions are met.
 The selection of which `list-member`s to drop and their order is unspecified and left to the implementer.
+Note that the above limits are _minimum_ requirements to comply with the specification.
+An implementor or platform MAY define higher limits and SHOULD propagate as much baggage information as is reasonable within their requirements.
+If a platform cannot propagate all baggage, it MUST NOT propagate any partial `list-member`s.
+If there are multiple `baggage` headers, all limits apply to the combination of all `baggage` headers and not each header individually.
 
 ### Example
 
