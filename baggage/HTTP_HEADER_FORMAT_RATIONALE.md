@@ -5,7 +5,7 @@ This document provides a rationale for the decisions made for the `baggage` head
 ## General considerations
 
 - It should be human-readable. Cryptic headers would hide the fact of potential information disclosure.
-- It should be append-able (comma-separated) https://tools.ietf.org/html/rfc7230#page-24 so nodes
+- It should be appendable (comma-separated) https://tools.ietf.org/html/rfc7230#page-24 so nodes
 can add context properties without parsing existing headers.
 - Keys are a single word in ASCII, and values should be a short string in UTF-8 or a derivative of a URL.
 
@@ -41,6 +41,10 @@ Vary approach may be implemented as a new "header reference" value type `ref`.
 
 The header should be human-readable and editable. Thus spaces are allowed before and after the comma, equal sign, and semicolon separators. It makes manual editing of headers less error-prone. It also allows better visual separation of fields when value modified manually.
 
+## Why not use Structured Field Values for HTTP?
+
+We had several discussions about using [Structured Field Values for HTTP](https://datatracker.ietf.org/doc/html/rfc8941) and finally decided to go with this explicit definition of encoding. The rationale is to reduce complexity as we only need a small subset of the functionality for Baggage. For example, the closest match to this in Structured Field Values format is a dictionary, but it allows many features that adds complexity to Baggage (e.g., recursive inner lists with items of different types). While it may be possible to specify various restrictions to "subtract" functionality from RFC 8941, we believe it will make things more complex as we will end up in a much worse place - neither adhering to RFC 8941 nor having a simple specification. Further, we are not tied only to HTTP. In the future, we will expand the specification to other protocols and we want to retain a simpler encoding scheme.
+
 ## Lowercase header name
 
 In order to maximize the portability of the `baggage` header it is intentionally specified as a single lowercase word.
@@ -63,6 +67,5 @@ URL encoding is a low-overhead way to encode Unicode characters for non-Latin ch
 
 ## Limits
 
-Limits prevent processing, storage, and analysis of the header and its values from being overly burdensome. The overall size and number of list members is limited in order to place an upper limit on the costs incurred processing and storing the header and its constituent values.
-
-Limiting the size of each key-value pair prevents any single value from exhausting the header size limit and preventing other values from being included. The maximum size of a key-value pair was chosen to allow a full URL to be stored with some additional metadata.
+Lower limits ensure a minimum usefulness for users, while preventing processing, storage, and analysis of the header and its values from being overly burdensome.
+The minimum overall size and number of list members is given so that a user may reliably determine if a header value will be propagated, even through a platform with limited resources.
