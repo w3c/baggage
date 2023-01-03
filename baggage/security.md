@@ -9,4 +9,4 @@ Application owners should either ensure that no proprietary or confidential info
 
 
 ## Other Risks
-Application owners need to make sure to test all code paths leading to the sending of the `baggage` header. For example, in single page browser applications, it is typical to make cross-origin requests. If one of these code paths leads to `baggage` headers being sent by cross-origin calls that are restricted using <a data-cite='FETCH#http-access-control-request-headers'>`Access-Control-Allow-Headers`</a> [[FETCH]], it may fail.
+Application owners need to make sure to test all code paths leading to the sending of the `baggage` header. For example, in web applications written in JavaScript, it is typical to make cross-origin requests. If one of these code paths leads to `baggage` headers being sent by cross-origin calls that are restricted using <a data-cite='FETCH#http-access-control-request-headers'>`Access-Control-Allow-Headers`</a> [[FETCH]], it may fail.
