@@ -10,7 +10,7 @@ class BaggageTest(unittest.TestCase):
         self.assertEqual(baggage.entries, [])
 
     def test_parse_simple(self):
-        baggage = Baggage().from_string("SomeKey=SomeValue")
+        baggage = Baggage().from_string("SomeKey=DONOTMERGE")
         self.assertEqual(len(baggage.entries), 1)
         entry = baggage.entries[0]
         self.assertEqual(entry.key, "SomeKey")
