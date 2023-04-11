@@ -63,7 +63,9 @@ key-character          =/ unicode-connector-punctuation
 # From JS <ZWNJ> and <ZWJ> are format-control characters that are used to make necessary distinctions when forming words or phrases in certain languages. In ECMAScript source text, <ZWNJ> and <ZWJ> may also be used in an identifier after the first character.
 key-character          =/ <ZWNJ>
 key-character          =/ <ZWJ>
+```
 
+```
 # TODO remove everything below when it is translated to EBNF
 # EVERYTHING BELOW THIS LINE DIRECTLY LIFTED FROM JAVASCRIPT"
 
