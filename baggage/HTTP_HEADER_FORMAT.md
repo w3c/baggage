@@ -23,7 +23,6 @@ baggage-string         =  list-member 0*179( OWS "," OWS list-member )
 list-member            =  key OWS "=" OWS value *( OWS ";" OWS property )
 property               =  key OWS "=" OWS value
 property               =/ key OWS
-key                    =  token ; as defined in RFC 7230, Section 3.2.6
 value                  =  *baggage-octet
 baggage-octet          =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                           ; US-ASCII characters excluding CTLs,
@@ -45,7 +44,48 @@ Producers SHOULD try to produce a `baggage-string` without any `list-member`s wh
 
 #### key
 
-A `token` which identifies a `value` in the `baggage`. `token` is defined in [RFC7230, Section 3.2.6](https://tools.ietf.org/html/rfc7230#section-3.2.6).
+```ABNF
+key                    =  key-start
+                       =/ key-start key-character
+
+# TODO decide on key start characters. These come from JS and exist primarily to distinguish them from other source code syntax items like numbers, quotes, and operators.
+key-start              =  unicode-letter
+key-start              =/ $
+key-start              =/ _
+key-start              =/ \ unicode-escape-sequence
+
+key-character          =  key-start
+key-character          =/ unicode-combining-mark
+key-character          =/ unicode-digit
+key-character          =/ unicode-connector-punctuation
+
+# TODO define these
+# From JS <ZWNJ> and <ZWJ> are format-control characters that are used to make necessary distinctions when forming words or phrases in certain languages. In ECMAScript source text, <ZWNJ> and <ZWJ> may also be used in an identifier after the first character.
+key-character          =/ <ZWNJ>
+key-character          =/ <ZWJ>
+
+# TODO remove everything below when it is translated to EBNF
+# EVERYTHING BELOW THIS LINE DIRECTLY LIFTED FROM JAVASCRIPT"
+
+UnicodeLetter
+    any character in the Unicode categories “Uppercase letter (Lu)”, “Lowercase letter (Ll)”, “Titlecase letter (Lt)”, “Modifier letter (Lm)”, “Other letter (Lo)”, or “Letter number (Nl)”.
+
+UnicodeCombiningMark
+    any character in the Unicode categories “Non-spacing mark (Mn)” or “Combining spacing mark (Mc)”
+
+UnicodeDigit
+    any character in the Unicode category “Decimal number (Nd)”
+
+UnicodeConnectorPunctuation
+    any character in the Unicode category “Connector punctuation (Pc)”
+
+UnicodeEscapeSequence
+    u HexDigit HexDigit HexDigit HexDigit
+```
+
+<!-- TODO: is the word `token` meaningful anymore? Should we define it? -->
+A `token` which identifies a `value` in the `baggage`.
+A key must start with a letter, `_`, `$`, or a unicode escape sequence prefixed by a `\`.
 Leading and trailing whitespaces (`OWS`) are allowed and are not considered to be a part of the key.
 
 #### value
