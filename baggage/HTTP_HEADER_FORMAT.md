@@ -47,25 +47,21 @@ Producers SHOULD try to produce a `baggage-string` without any `list-member`s wh
 ```ABNF
 key                    =  key-start
                        =/ key-start key-character
-
-# TODO decide on key start characters. These come from JS and exist primarily to distinguish them from other source code syntax items like numbers, quotes, and operators.
+; TODO decide on key start characters. These come from JS and exist primarily to distinguish them from other source code syntax items like numbers, quotes, and operators.
 key-start              =  unicode-letter
-key-start              =/ $
-key-start              =/ _
-key-start              =/ \ unicode-escape-sequence
-
+key-start              =/ "$"
+key-start              =/ "_"
+key-start              =/ "\\" unicode-escape-sequence
 key-character          =  key-start
 key-character          =/ unicode-combining-mark
 key-character          =/ unicode-digit
 key-character          =/ unicode-connector-punctuation
-
-# TODO define these
-# From JS <ZWNJ> and <ZWJ> are format-control characters that are used to make necessary distinctions when forming words or phrases in certain languages. In ECMAScript source text, <ZWNJ> and <ZWJ> may also be used in an identifier after the first character.
+; TODO define these
+; From JS <ZWNJ> and <ZWJ> are format-control characters that are used to make necessary distinctions when forming words or phrases in certain languages. In ECMAScript source text, <ZWNJ> and <ZWJ> may also be used in an identifier after the first character.
 key-character          =/ <ZWNJ>
 key-character          =/ <ZWJ>
 ```
-
-```
+<!-- 
 # TODO remove everything below when it is translated to EBNF
 # EVERYTHING BELOW THIS LINE DIRECTLY LIFTED FROM JAVASCRIPT"
 
@@ -82,8 +78,7 @@ UnicodeConnectorPunctuation
     any character in the Unicode category “Connector punctuation (Pc)”
 
 UnicodeEscapeSequence
-    u HexDigit HexDigit HexDigit HexDigit
-```
+    u HexDigit HexDigit HexDigit HexDigit -->
 
 <!-- TODO: is the word `token` meaningful anymore? Should we define it? -->
 A `token` which identifies a `value` in the `baggage`.
