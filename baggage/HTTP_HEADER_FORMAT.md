@@ -61,24 +61,21 @@ key-character          =/ unicode-connector-punctuation
 key-character          =/ <ZWNJ>
 key-character          =/ <ZWJ>
 ```
-<!-- 
-# TODO remove everything below when it is translated to EBNF
-# EVERYTHING BELOW THIS LINE DIRECTLY LIFTED FROM JAVASCRIPT"
 
+```
+TODO remove everything below when it is translated to EBNF
+EVERYTHING BELOW THIS LINE DIRECTLY LIFTED FROM JAVASCRIPT"
 UnicodeLetter
     any character in the Unicode categories “Uppercase letter (Lu)”, “Lowercase letter (Ll)”, “Titlecase letter (Lt)”, “Modifier letter (Lm)”, “Other letter (Lo)”, or “Letter number (Nl)”.
-
 UnicodeCombiningMark
     any character in the Unicode categories “Non-spacing mark (Mn)” or “Combining spacing mark (Mc)”
-
 UnicodeDigit
     any character in the Unicode category “Decimal number (Nd)”
-
 UnicodeConnectorPunctuation
     any character in the Unicode category “Connector punctuation (Pc)”
-
 UnicodeEscapeSequence
-    u HexDigit HexDigit HexDigit HexDigit -->
+    u HexDigit HexDigit HexDigit HexDigit
+```
 
 <!-- TODO: is the word `token` meaningful anymore? Should we define it? -->
 A `token` which identifies a `value` in the `baggage`.
