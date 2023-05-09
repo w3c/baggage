@@ -23,7 +23,6 @@ baggage-string         =  list-member 0*179( OWS "," OWS list-member )
 list-member            =  key OWS "=" OWS value *( OWS ";" OWS property )
 property               =  key OWS "=" OWS value
 property               =/ key OWS
-key                    =  token ; as defined in RFC 7230, Section 3.2.6
 value                  =  *baggage-octet
 baggage-octet          =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                           ; US-ASCII characters excluding CTLs,
@@ -31,8 +30,6 @@ baggage-octet          =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                           ; and backslash
 OWS                    =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
-
-`token` is defined in [[!RFC7230]], Section 3.2.6: https://tools.ietf.org/html/rfc7230#section-3.2.6
 
 The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.ietf.org/html/rfc7230#section-3.2.3
 
@@ -45,7 +42,8 @@ Producers SHOULD try to produce a `baggage-string` without any `list-member`s wh
 
 #### key
 
-A `token` which identifies a `value` in the `baggage`. `token` is defined in [RFC7230, Section 3.2.6](https://tools.ietf.org/html/rfc7230#section-3.2.6).
+A `key` which identifies a `value` in the `baggage`.
+`key` is defined as `Name` in [[XML]], Section 2.3: https://www.w3.org/TR/xml/#NT-Name
 Leading and trailing whitespaces (`OWS`) are allowed and are not considered to be a part of the key.
 
 #### value
