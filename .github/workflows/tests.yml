@@ -1,0 +1,18 @@
+name: Self Test
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Run the python tests
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11.2
+          architecture: x64
+      - run: cd test && python test_baggage.py
+        shell: bash
