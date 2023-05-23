@@ -118,7 +118,7 @@ baggage: userId=Am%C3%A9lie,serverNode=DF%2028,isProduction=false
 Context might be split into multiple headers:
 
 ```
-baggage: userId=alice
+baggage: userId=doctorwho
 baggage: serverNode=DF%2028,isProduction=false
 ```
 
