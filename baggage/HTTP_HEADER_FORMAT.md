@@ -12,6 +12,10 @@ Header name: `baggage`
 In order to increase interoperability across multiple protocols and encourage successful integration,
 implementations SHOULD keep the header name lowercase.
 
+## Header Encoding
+
+This header is a [[UTF-8]] encoded [[UNICODE]] string, however it uses only code points from the Basic Latin Unicode Block which are encoded identically in both Unicode and [[ASCII]].
+
 ## Header Content
 
 This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]].
@@ -50,7 +54,7 @@ Leading and trailing whitespaces (`OWS`) are allowed and are not considered to b
 
 #### value
 
-A value contains a UTF-8 encoded string.
+A string which contains a value identified by the `key`.
 Any code points outside of the `baggage-octet` range MUST be percent-encoded.
 The percent code point (`U+0025`) MUST be percent-encoded.
 Code points which are not required to be percent-encoded MAY be percent-encoded.
