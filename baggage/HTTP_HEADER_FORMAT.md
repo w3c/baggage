@@ -12,6 +12,10 @@ Header name: `baggage`
 In order to increase interoperability across multiple protocols and encourage successful integration,
 implementations SHOULD keep the header name lowercase.
 
+## Header Encoding
+
+This header is a [[UTF-8]] encoded [[UNICODE]] string, however it uses only code points from the Basic Latin Unicode Block which are encoded identically in both Unicode and [[ASCII]].
+
 ## Header Content
 
 This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]].
@@ -50,17 +54,17 @@ Leading and trailing whitespaces (`OWS`) are allowed and are not considered to b
 
 #### value
 
-A value contains a string whose character encoding MUST be UTF-8 [[Encoding]].
-Any characters outside of the `baggage-octet` range of characters MUST be percent-encoded.
-The percent character MUST be percent-encoded.
-Characters which are not required to be percent-encoded MAY be percent-encoded.
+A string which contains a value identified by the `key`.
+Any code points outside of the `baggage-octet` range MUST be percent-encoded.
+The percent code point (`U+0025`) MUST be percent-encoded.
+Code points which are not required to be percent-encoded MAY be percent-encoded.
 Percent-encoding is defined in [[RFC3986]], Section 2.1: https://datatracker.ietf.org/doc/html/rfc3986#section-2.1.
 
-When decoding the value, percent-encoded octet sequences that do not match the UTF-8 encoding scheme MUST be replaced with the replacement character (U+FFFD).
+When decoding the value, percent-encoded octet sequences that do not match the UTF-8 encoding scheme MUST be replaced with the replacement code point (`U+FFFD`).
 
 Leading and trailing whitespaces (`OWS`) are allowed and are not considered to be a part of the value.
 
-Note, `value` MAY contain any number of the equal sign (`=`) characters. Parsers
+Note, `value` MAY contain any number of the equal sign (`U+003D`) code points. Parsers
 MUST NOT assume that the equal sign is only used to separate `key` and `value`.
 
 #### property
@@ -110,7 +114,7 @@ Single header:
 baggage: userId=alice,serverNode=DF%2028,isProduction=false
 ```
 
-Here is one more example where values with characters outside of the `baggage-octet` range of characters are percent-encoded. Consider the entry: `userId="Amélie"`, `serverNode="DF 28"`, `isProduction=false`:
+Here is one more example where values with characters outside of the `baggage-octet` range are percent-encoded. Consider the entry: `userId="Amélie"`, `serverNode="DF 28"`, `isProduction=false`:
 
 ```
 baggage: userId=Am%C3%A9lie,serverNode=DF%2028,isProduction=false
