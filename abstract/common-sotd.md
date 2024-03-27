@@ -1,1 +1,0 @@
-During the Candidate Recommendation stage, the Working Group intends to demonstrate at least 2 implementations adopting this specification and making use of it, using a test suite.
