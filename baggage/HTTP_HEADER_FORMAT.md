@@ -36,7 +36,7 @@ baggage-octet          =  %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 OWS                    =  *( SP / HTAB ) ; optional white space, as defined in RFC 7230, Section 3.2.3
 ```
 
-`token` is defined in [[!RFC7230]], Section 3.2.6: https://tools.ietf.org/html/rfc7230#section-3.2.6
+`token` is defined in [[RFC7230]], Section 3.2.6: https://tools.ietf.org/html/rfc7230#section-3.2.6
 
 The definition of `OWS` is taken from [[RFC7230]], Section 3.2.3: https://tools.ietf.org/html/rfc7230#section-3.2.3
 
@@ -52,6 +52,12 @@ Producers SHOULD try to produce a `baggage-string` without any `list-member`s wh
 A `token` which identifies a `value` in the `baggage`. `token` is defined in [RFC7230, Section 3.2.6](https://tools.ietf.org/html/rfc7230#section-3.2.6).
 Leading and trailing whitespaces (`OWS`) are allowed and are not considered to be a part of the key.
 
+<aside class="note">
+
+Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, due to the implementation details of stable implementations prior to the writing of this specification `key` is limited to the [=ASCII code points=] allowed by the definition of token in [[RFC7230]].
+
+</aside>
+
 #### value
 
 A string which contains a value identified by the `key`.
@@ -66,6 +72,12 @@ Leading and trailing whitespaces (`OWS`) are allowed and are not considered to b
 
 Note, `value` MAY contain any number of the equal sign (`U+003D`) code points. Parsers
 MUST NOT assume that the equal sign is only used to separate `key` and `value`.
+
+<aside class="note">
+
+Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, due to the implementation details of stable implementations prior to the writing of this specification `value` is limited to the [=ASCII code points=] of `baggage-octet`.
+
+</aside>
 
 #### property
 
