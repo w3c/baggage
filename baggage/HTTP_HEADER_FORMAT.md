@@ -54,7 +54,7 @@ Leading and trailing whitespaces (`OWS`) are allowed and are not considered to b
 
 <aside class="note">
 
-Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, due to the implementation details of stable implementations prior to the writing of this specification `key` is limited to the [=ASCII code points=] allowed by the definition of token in [[RFC7230]].
+Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, `key` is limited to the [=ASCII code points=] allowed by the definition of token in [[RFC7230]]. This is due to the implementation details of stable implementations prior to the writing of this specification. 
 
 </aside>
 
@@ -75,7 +75,7 @@ MUST NOT assume that the equal sign is only used to separate `key` and `value`.
 
 <aside class="note">
 
-Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, due to the implementation details of stable implementations prior to the writing of this specification `value` is limited to the [=ASCII code points=] of `baggage-octet`.
+Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, `value` is limited to the [=ASCII code points=] of `baggage-octet`. This is due to the implementation details of stable implementations prior to the writing of this specification.
 
 </aside>
 
