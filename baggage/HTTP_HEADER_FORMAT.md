@@ -132,7 +132,7 @@ Here is one more example where values with characters outside of the `baggage-oc
 baggage: userId=Am%C3%A9lie,serverNode=DF%2028,isProduction=false
 ```
 
-Context might be split into multiple headers:
+Baggage might be split into multiple headers:
 
 ```
 baggage: userId=alice
