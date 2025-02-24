@@ -180,4 +180,6 @@ The following mutations are allowed:
 
 If a system receiving or updating a `baggage` request header determines that the number of baggage entries exceeds the limit defined in the limits section above, it MAY drop or truncate certain baggage entries in any order chosen by the implementation.
 
-If a system determines that the value of `baggage-string` is not in the format defined in this specification, the behavior is undefined. For example, it MAY remove an offending `list-member` before propagating the rest of the `baggage-string`, or MAY decide to not propagate the `baggage-string` at all.
+If a system determines that the value of `baggage-string` is not in the format defined in this specification, the behavior is undefined. For example, it MAY remove an offending `list-member` before propagating the rest of the `baggage-string`, or MAY decide to not propagate the `baggage-string` at all. This specification is not specifying how implementation may decide which `list-member`s may be considered correct when the whole string is not a correct `baggage-string` as the specification does not prescribe any particular parsing algorithm.
+
+Note, the `baggage-string` can be passed as multiple headers. Implementation is not providing any requirements to propagate those headers of many which are in correct format. The `baggage-string` is seen as a single value combined from multiple headers in this specification.
