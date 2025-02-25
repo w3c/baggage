@@ -135,6 +135,19 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.properties[1].key, "SecondProp")
         self.assertEqual(entry.properties[1].value, 'PropValue')
 
+    def test_parse_multiple_properties_same_name(self):
+        entry = BaggageEntry.from_string(
+            "SomeKey=SomeValue;SomeProp;SomeProp=PropValue;SomeProp=AnotherPropValue")
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "SomeValue")
+        self.assertEqual(len(entry.properties), 3)
+        self.assertEqual(entry.properties[0].key, "SomeProp")
+        self.assertEqual(entry.properties[0].value, None)
+        self.assertEqual(entry.properties[1].key, "SomeProp")
+        self.assertEqual(entry.properties[1].value, "PropValue")
+        self.assertEqual(entry.properties[2].key, "SomeProp")
+        self.assertEqual(entry.properties[2].value, "AnotherPropValue")
+
     def test_parse_kv_property(self):
         entry = BaggageEntry.from_string(
             "SomeKey=SomeValue;SomePropKey=SomePropValue")
