@@ -25,7 +25,7 @@ class Baggage(object):
 
     def to_string(self) -> str:
         '''
-        Serialize a Baggage class into an HTML header string
+        Serialize a Baggage class into an HTTP header string
 
         Only the first 180 entries will be serialized even if more than 180 entries exist in the list.
         Entries will only be included until the limit of 8192 bytes is reached.
@@ -106,10 +106,13 @@ class BaggageEntry(object):
 class BaggageEntryProperty(object):
     def __init__(self, key: str, value: str = None) -> None:
         self.key = key
-        self.value = value
+        if value is not None:
+          self.value = unquote(value)
+        else:
+          self.value = value
 
     def to_string(self):
         if self.value is None:
             return self.key
 
-        return '%s=%s' % (self.key, self.value)
+        return '%s=%s' % (self.key, quote(self.value))

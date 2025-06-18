@@ -108,9 +108,12 @@ class BaggageEntryTest(unittest.TestCase):
     def test_parse_percent_encoded(self):
         value = "\t \"\';=asdf!@#$%^&*()"
         encoded_value = urllib.parse.quote(value)
+        # Verify that parsing a baggage header received from upstream via from_string decodes the baggage value with
+        # respect to percent-encoding.
         entry = BaggageEntry.from_string("SomeKey=%s" % (encoded_value))
         self.assertEqual(entry.key, "SomeKey")
         self.assertEqual(entry.value, value)
+        # Verify that serializing a baggage header via to_string before sending it downstream applies percent-encoding.
         self.assertEqual(entry.to_string(
         ), "SomeKey=%09%20%22%27%3B%3Dasdf%21%40%23%24%25%5E%26%2A%28%29")
 
@@ -131,6 +134,19 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.properties[0].value, None)
         self.assertEqual(entry.properties[1].key, "SecondProp")
         self.assertEqual(entry.properties[1].value, 'PropValue')
+
+    def test_parse_multiple_properties_same_name(self):
+        entry = BaggageEntry.from_string(
+            "SomeKey=SomeValue;SomeProp;SomeProp=PropValue;SomeProp=AnotherPropValue")
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "SomeValue")
+        self.assertEqual(len(entry.properties), 3)
+        self.assertEqual(entry.properties[0].key, "SomeProp")
+        self.assertEqual(entry.properties[0].value, None)
+        self.assertEqual(entry.properties[1].key, "SomeProp")
+        self.assertEqual(entry.properties[1].value, "PropValue")
+        self.assertEqual(entry.properties[2].key, "SomeProp")
+        self.assertEqual(entry.properties[2].value, "AnotherPropValue")
 
     def test_parse_kv_property(self):
         entry = BaggageEntry.from_string(
@@ -183,6 +199,32 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.properties[0].key, "SomePropKey")
         self.assertEqual(entry.properties[0].value, "SomePropValue")
 
+    def test_parse_percent_encoded_property(self):
+        property_value = "\t \"\';=asdf!@#$%^&*()"
+        encoded_property_value = urllib.parse.quote(property_value)
+        # Verify that parsing a baggage header received from upstream via from_string decodes the property value with
+        # respect to percent-encoding.
+        entry = BaggageEntry.from_string("SomeKey=SomeValue;SomePropKey=%s" % (encoded_property_value))
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "SomeValue")
+        self.assertEqual(len(entry.properties), 1)
+        self.assertEqual(entry.properties[0].key, "SomePropKey")
+        self.assertEqual(entry.properties[0].value, property_value)
+        # Verify that serializing a baggage header via to_string before sending it downstream applies percent-encoding
+        # to the property value if necessary.
+        self.assertEqual(entry.to_string(),
+          "SomeKey=SomeValue;SomePropKey=%09%20%22%27%3B%3Dasdf%21%40%23%24%25%5E%26%2A%28%29")
+
+    def test_parse_property_without_value_no_percent_decoding(self):
+        # This looks like an upstream participant percent-encoded the inner OWS and the equals character of a property
+        # key-value pair. The correct behavior is to treat this as one property of the form `key`, and to not ttempt to
+        # decode it back into a key-value shaped property (`key OWS "=" OWS value`).
+        entry = BaggageEntry.from_string(
+            "SomeKey=SomeValue;ValueProp%20%09%20%3D%20%09%20PropVal")
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "SomeValue")
+        self.assertEqual(entry.properties[0].key, "ValueProp%20%09%20%3D%20%09%20PropVal")
+        self.assertEqual(entry.properties[0].value, None)
 
 class LimitsTest(unittest.TestCase):
     def test_serialize_at_least_64(self):

@@ -54,7 +54,7 @@ Leading and trailing whitespaces (`OWS`) are allowed and are not considered to b
 
 <aside class="note">
 
-Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, `key` is limited to the [=ASCII code points=] allowed by the definition of token in [[RFC7230]]. This is due to the implementation details of stable implementations prior to the writing of this specification. 
+Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, `key` is limited to the [=ASCII code points=] allowed by the definition of token in [[RFC7230]]. This is due to the implementation details of stable implementations prior to the writing of this specification.
 
 </aside>
 
@@ -81,9 +81,23 @@ Though the baggage header is a [[UTF-8]] encoded [[UNICODE]] string, `value` is 
 
 #### property
 
-Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`. 
+Additional metadata MAY be appended to values in the form of property set, represented as semi-colon `;` delimited list of keys and/or key-value pairs, e.g. `;k1=v1;k2;k3=v3`.
 Property keys and values are given no specific meaning by this specification.
 Leading and trailing `OWS` is allowed and is not considered to be a part of the property key or value.
+
+With respect to encoding and decoding, the rules for [baggage values](#value)
+also apply to the value part of a properties that use the key-value pair form
+(e.g. `property = key OWS "=" OWS value`), that is:
+Any code points outside of the `baggage-octet` range in the property value MUST
+be percent-encoded.
+If the property value contains the percent code point (`U+0025`), it MUST be percent-encoded.
+Code points in the property value which are not required to be percent-encoded
+MAY be percent-encoded.
+When decoding the property value, percent-encoded octet sequences that do not
+match the UTF-8 encoding scheme MUST be replaced with the replacement code
+point (`U+FFFD`).
+Percent-encoding is defined in [[RFC3986]], Section 2.1:
+https://datatracker.ietf.org/doc/html/rfc3986#section-2.1.
 
 ### Limits
 
