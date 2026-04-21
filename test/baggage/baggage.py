@@ -7,11 +7,8 @@ from urllib.parse import quote, unquote
 class Baggage(object):
     '''baggage regular expression reference implementation'''
     _DELIMITER_FORMAT_RE = re.compile('[ \t]*,[ \t]*')
-    entries: list[BaggageEntry] = []
-
     def __init__(self, entries: list[BaggageEntry] | None = None):
-        if entries is not None:
-            self.entries = entries
+        self.entries = entries if entries is not None else []
 
     @classmethod
     def from_string(cls, value: str) -> Baggage:
