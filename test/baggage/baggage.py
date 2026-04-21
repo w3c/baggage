@@ -88,7 +88,7 @@ class BaggageEntry(object):
                 properties.append(BaggageEntryProperty(
                     kv_match[1], kv_match[2]))
             else:
-                raise ValueError('property %s could not be parsed')
+                raise ValueError('property %s could not be parsed' % s)
 
         return cls(key, unquote(value), properties)
 
