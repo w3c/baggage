@@ -23,7 +23,7 @@ This section uses the Augmented Backus-Naur Form (ABNF) notation of [[!RFC5234]]
 ### Definition
 
 ```ABNF
-baggage-string         =  list-member 0*179( OWS "," OWS list-member )
+baggage-string         =  list-member 0*63( OWS "," OWS list-member )
 list-member            =  key OWS "=" OWS value *( OWS ";" OWS property )
 property               =  key OWS "=" OWS value
 property               =/ key OWS
