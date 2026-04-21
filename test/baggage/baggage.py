@@ -104,9 +104,9 @@ class BaggageEntryProperty(object):
     def __init__(self, key: str, value: str = None) -> None:
         self.key = key
         if value is not None:
-          self.value = unquote(value)
+            self.value = unquote(value)
         else:
-          self.value = value
+            self.value = value
 
     def to_string(self):
         if self.value is None:
