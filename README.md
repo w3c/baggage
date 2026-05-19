@@ -34,8 +34,7 @@ Another system that supports the baggage concept is .NET. It supports it as part
 
 ## Why are we doing this
 
-See
-[Why](https://github.com/w3c/distributed-tracing-wg#why-are-we-doing-this)
+See [Why is this needed?](https://github.com/w3c/distributed-tracing-wg/blob/main/EXPLAINER.md#why-is-this-needed)
 
 ## Contributing
 
