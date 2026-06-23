@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 import re
 from urllib.parse import quote, unquote
 
@@ -7,11 +8,11 @@ from urllib.parse import quote, unquote
 class Baggage(object):
     '''baggage regular expression reference implementation'''
     _DELIMITER_FORMAT_RE = re.compile('[ \t]*,[ \t]*')
-    entries: list[BaggageEntry] = []
+    _MAX_ENTRIES = 64
+    _MAX_BYTES = 8192
 
     def __init__(self, entries: list[BaggageEntry] | None = None):
-        if entries is not None:
-            self.entries = entries
+        self.entries = entries if entries is not None else []
 
     @classmethod
     def from_string(cls, value: str) -> Baggage:
@@ -19,28 +20,41 @@ class Baggage(object):
         if not isinstance(value, str):
             raise ValueError('value must be a string')
 
-        # list-member 0*179( OWS "," OWS list-member )
+        # list-member 0*63( OWS "," OWS list-member )
         value = re.split(Baggage._DELIMITER_FORMAT_RE, value)
         return Baggage([BaggageEntry.from_string(s) for s in value])
 
     def to_string(self) -> str:
+        '''Serialize a Baggage class into an HTTP header string.
+
+        If the resulting baggage-string would exceed the spec limits
+        (64 list-members or 8192 bytes), the implementation randomly
+        decides whether to truncate. When truncating, entries are
+        randomly dropped until both conditions are met.
         '''
-        Serialize a Baggage class into an HTTP header string
+        entries = list(self.entries)
+        serialized = [e.to_string() for e in entries]
 
-        Only the first 180 entries will be serialized even if more than 180 entries exist in the list.
-        Entries will only be included until the limit of 8192 bytes is reached.
-        Entries which serialize longer than the 4096 byte limit per entry are skipped.
-        '''
-        out = ""
-        for i, entry in enumerate(self.entries):
-            entry_str = entry.to_string()
+        def _total_bytes(parts):
+            return len(','.join(parts).encode('utf-8'))
 
-            # Prepend delimiter on all but the first entry
-            if i > 0:
-                out += ","
-            out += entry_str
+        exceeds_limits = (
+            len(entries) > self._MAX_ENTRIES or
+            _total_bytes(serialized) > self._MAX_BYTES
+        )
 
-        return out
+        if exceeds_limits and random.choice([True, False]):
+            indices = list(range(len(entries)))
+            random.shuffle(indices)
+            drop = set()
+            for idx in indices:
+                remaining = [s for i, s in enumerate(serialized) if i not in drop]
+                if len(remaining) <= self._MAX_ENTRIES and _total_bytes(remaining) <= self._MAX_BYTES:
+                    break
+                drop.add(idx)
+            serialized = [s for i, s in enumerate(serialized) if i not in drop]
+
+        return ','.join(serialized)
 
 
 class BaggageEntry(object):

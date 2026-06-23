@@ -227,33 +227,67 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.properties[0].value, None)
 
 class LimitsTest(unittest.TestCase):
+    _MAX_ENTRIES = 64
+    _MAX_BYTES = 8192
+    _ITERATIONS = 20
+
     def test_serialize_at_least_64(self):
         '''A platform MUST propagate all list-members up to at least 64 list-members including any list-members added by the platform.'''
-        baggage = Baggage([BaggageEntry("key%s" % x, "value")
-                          for x in range(64)])
-        baggage_str = baggage.to_string()
-        entry_strs = baggage_str.split(",")
-        self.assertEqual(len(entry_strs), 64)
+        entries = [BaggageEntry("key%s" % x, "value") for x in range(64)]
+        original_kvs = {(e.key, e.value) for e in entries}
+        for run in range(self._ITERATIONS):
+            with self.subTest(iteration=run):
+                baggage = Baggage(entries)
+                baggage_str = baggage.to_string()
+                result = Baggage.from_string(baggage_str)
+                result_kvs = {(e.key, e.value) for e in result.entries}
+                self.assertEqual(len(result_kvs), 64)
+                self.assertTrue(result_kvs.issubset(original_kvs))
 
     def test_serialize_long_entry(self):
         '''A platform MUST propagate all list-members including any list-members added by the platform if the resulting baggage-string would be 8192 bytes or less.'''
         long_value = '0123456789' * 819
-        baggage = Baggage([BaggageEntry("a", long_value)])
-        # a 1 character
-        # = 1 character
-        # 0123456789 10 characters * 819 = 8190 characters
-        # total 8192 characters
-        baggage_str = baggage.to_string()
-        self.assertEqual(len(baggage_str), 8192)
+        entries = [BaggageEntry("a", long_value)]
+        original_kvs = {(e.key, e.value) for e in entries}
+        for run in range(self._ITERATIONS):
+            with self.subTest(iteration=run):
+                baggage = Baggage(entries)
+                baggage_str = baggage.to_string()
+                result = Baggage.from_string(baggage_str)
+                result_kvs = {(e.key, e.value) for e in result.entries}
+                self.assertEqual(len(baggage_str), 8192)
+                self.assertTrue(result_kvs.issubset(original_kvs))
 
     def test_serialize_many_entries(self):
-        # 512 entries with 15 bytes + 1 trailing comma
-        baggage = Baggage(
-            [BaggageEntry("{:03d}".format(x), '0123456789a') for x in range(512)])
+        '''When limits are exceeded, result is either all entries or a truncated subset within limits.'''
+        entries = [BaggageEntry("{:03d}".format(x), '0123456789a') for x in range(512)]
+        original_kvs = {(e.key, e.value) for e in entries}
+        for run in range(self._ITERATIONS):
+            with self.subTest(iteration=run):
+                baggage = Baggage(entries)
+                baggage_str = baggage.to_string()
+                result = Baggage.from_string(baggage_str)
+                result_kvs = {(e.key, e.value) for e in result.entries}
+                self.assertTrue(result_kvs.issubset(original_kvs))
+                if len(result_kvs) < len(original_kvs):
+                    self.assertLessEqual(len(result_kvs), self._MAX_ENTRIES)
+                    self.assertLessEqual(len(baggage_str.encode('utf-8')), self._MAX_BYTES)
 
-        # last entry is 16 bytes
-        baggage_str = baggage.to_string() + 'b'
-        self.assertEqual(len(baggage_str), 8192)
+    def test_serialize_over_64_entries(self):
+        '''When entry count exceeds 64, result is either all entries or a truncated subset within limits.'''
+        entries = [BaggageEntry("key%s" % x, "val") for x in range(100)]
+        original_kvs = {(e.key, e.value) for e in entries}
+        for run in range(self._ITERATIONS):
+            with self.subTest(iteration=run):
+                baggage = Baggage(entries)
+                baggage_str = baggage.to_string()
+                result = Baggage.from_string(baggage_str)
+                result_kvs = {(e.key, e.value) for e in result.entries}
+                self.assertTrue(result_kvs.issubset(original_kvs))
+                if len(result_kvs) < len(original_kvs):
+                    self.assertLessEqual(len(result_kvs), self._MAX_ENTRIES)
+                    self.assertLessEqual(len(baggage_str.encode('utf-8')), self._MAX_BYTES)
+
 
 if __name__ == '__main__':
     unittest.main()
