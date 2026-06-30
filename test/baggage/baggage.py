@@ -7,11 +7,8 @@ from urllib.parse import quote, unquote
 class Baggage(object):
     '''baggage regular expression reference implementation'''
     _DELIMITER_FORMAT_RE = re.compile('[ \t]*,[ \t]*')
-    entries: list[BaggageEntry] = []
-
     def __init__(self, entries: list[BaggageEntry] | None = None):
-        if entries is not None:
-            self.entries = entries
+        self.entries = entries if entries is not None else []
 
     @classmethod
     def from_string(cls, value: str) -> Baggage:
@@ -91,7 +88,7 @@ class BaggageEntry(object):
                 properties.append(BaggageEntryProperty(
                     kv_match[1], kv_match[2]))
             else:
-                raise ValueError('property %s could not be parsed')
+                raise ValueError('property %s could not be parsed' % s)
 
         return cls(key, unquote(value), properties)
 
@@ -107,9 +104,9 @@ class BaggageEntryProperty(object):
     def __init__(self, key: str, value: str = None) -> None:
         self.key = key
         if value is not None:
-          self.value = unquote(value)
+            self.value = unquote(value)
         else:
-          self.value = value
+            self.value = value
 
     def to_string(self):
         if self.value is None:
