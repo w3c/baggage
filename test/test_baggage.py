@@ -3,6 +3,9 @@ import urllib.parse
 
 from baggage import Baggage, BaggageEntry
 
+# Number of iterations for tests that exercise random behavior
+_ITERATIONS = 20
+
 
 class BaggageTest(unittest.TestCase):
     def test_ctor_default(self):
@@ -225,6 +228,249 @@ class BaggageEntryTest(unittest.TestCase):
         self.assertEqual(entry.value, "SomeValue")
         self.assertEqual(entry.properties[0].key, "ValueProp%20%09%20%3D%20%09%20PropVal")
         self.assertEqual(entry.properties[0].value, None)
+
+class InvalidEntryTest(unittest.TestCase):
+    '''Behavior for invalid baggage-string is undefined per spec.
+    Implementation may preserve the entry as-is or drop it.'''
+
+    def test_just_key_no_equals(self):
+        '''A bare key without = is not valid per ABNF. The serialized result
+        MUST be either the original string (preserved) or empty (dropped).'''
+        for run in range(_ITERATIONS):
+            with self.subTest(iteration=run):
+                baggage = Baggage.from_string("justKey")
+                baggage_str = baggage.to_string()
+                self.assertIn(baggage_str, ["justKey", ""])
+
+    def test_just_key_among_valid_entries(self):
+        '''An invalid entry among valid ones: valid entries MUST be preserved,
+        invalid entry is either kept as-is or dropped.'''
+        for run in range(_ITERATIONS):
+            with self.subTest(iteration=run):
+                baggage = Baggage.from_string("k1=v1,justKey,k2=v2")
+                keys = [e.key for e in baggage.entries]
+                # Valid entries must always be present
+                self.assertIn("k1", keys)
+                self.assertIn("k2", keys)
+                # justKey is either preserved or dropped
+                if "justKey" in keys:
+                    self.assertEqual(len(baggage.entries), 3)
+                else:
+                    self.assertEqual(len(baggage.entries), 2)
+                # Serialized form must only contain valid entries or preserved raw entries
+                baggage_str = baggage.to_string()
+                self.assertIn("k1=v1", baggage_str)
+                self.assertIn("k2=v2", baggage_str)
+
+
+class EmptyValueTest(unittest.TestCase):
+    '''value = *baggage-octet allows zero-length values'''
+
+    def test_parse_empty_value(self):
+        '''key= is valid per ABNF: value = *baggage-octet (zero or more)'''
+        entry = BaggageEntry.from_string("SomeKey=")
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "")
+        self.assertEqual(len(entry.properties), 0)
+
+    def test_parse_empty_value_with_property(self):
+        entry = BaggageEntry.from_string("SomeKey=;SomeProp")
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "")
+        self.assertEqual(len(entry.properties), 1)
+        self.assertEqual(entry.properties[0].key, "SomeProp")
+
+    def test_parse_empty_value_ows(self):
+        entry = BaggageEntry.from_string("SomeKey \t = \t ")
+        self.assertEqual(entry.key, "SomeKey")
+        self.assertEqual(entry.value, "")
+
+    def test_serialize_empty_value(self):
+        baggage = Baggage([BaggageEntry("SomeKey", "")])
+        baggage_str = baggage.to_string()
+        self.assertEqual(baggage_str, "SomeKey=")
+
+    def test_roundtrip_empty_value(self):
+        baggage = Baggage.from_string("SomeKey=")
+        self.assertEqual(len(baggage.entries), 1)
+        self.assertEqual(baggage.entries[0].key, "SomeKey")
+        self.assertEqual(baggage.entries[0].value, "")
+        self.assertEqual(baggage.to_string(), "SomeKey=")
+
+
+class DuplicateKeysTest(unittest.TestCase):
+    '''Uniqueness of keys between multiple list-members in a baggage-string is not guaranteed.'''
+
+    def test_parse_duplicate_keys(self):
+        '''Both entries with the same key MUST be preserved.'''
+        baggage = Baggage.from_string("key=value1,key=value2")
+        self.assertEqual(len(baggage.entries), 2)
+        self.assertEqual(baggage.entries[0].key, "key")
+        self.assertEqual(baggage.entries[0].value, "value1")
+        self.assertEqual(baggage.entries[1].key, "key")
+        self.assertEqual(baggage.entries[1].value, "value2")
+
+    def test_parse_duplicate_keys_preserves_order(self):
+        '''The order of duplicate entries SHOULD be preserved.'''
+        baggage = Baggage.from_string("k=first,k=second,k=third")
+        self.assertEqual(len(baggage.entries), 3)
+        self.assertEqual(baggage.entries[0].value, "first")
+        self.assertEqual(baggage.entries[1].value, "second")
+        self.assertEqual(baggage.entries[2].value, "third")
+
+    def test_parse_duplicate_keys_with_different_properties(self):
+        baggage = Baggage.from_string("key=value1;prop1,key=value2;prop2=val")
+        self.assertEqual(len(baggage.entries), 2)
+        self.assertEqual(baggage.entries[0].properties[0].key, "prop1")
+        self.assertEqual(baggage.entries[1].properties[0].key, "prop2")
+        self.assertEqual(baggage.entries[1].properties[0].value, "val")
+
+
+class InvalidUtf8ReplacementTest(unittest.TestCase):
+    '''When decoding the value, percent-encoded octet sequences that do not
+    match the UTF-8 encoding scheme MUST be replaced with the replacement
+    code point (U+FFFD).'''
+
+    def test_invalid_utf8_single_continuation_byte(self):
+        '''%80 is not a valid UTF-8 start byte, MUST be replaced with U+FFFD.'''
+        entry = BaggageEntry.from_string("key=%80")
+        self.assertEqual(entry.value, "\ufffd")
+
+    def test_invalid_utf8_truncated_sequence(self):
+        '''%C3 without continuation byte is invalid UTF-8, MUST be replaced with U+FFFD.'''
+        entry = BaggageEntry.from_string("key=%C3")
+        self.assertEqual(entry.value, "\ufffd")
+
+    def test_invalid_utf8_surrounded_by_valid(self):
+        '''Invalid byte in the middle of valid ASCII should only affect the invalid part.'''
+        entry = BaggageEntry.from_string("key=hello%80world")
+        self.assertEqual(entry.value, "hello\ufffdworld")
+
+    def test_invalid_utf8_in_property_value(self):
+        '''Property values MUST also replace invalid UTF-8 with U+FFFD.'''
+        entry = BaggageEntry.from_string("key=value;prop=%80")
+        self.assertEqual(entry.properties[0].value, "\ufffd")
+
+
+class SpecExamplesTest(unittest.TestCase):
+    '''Test the examples from the specification itself.'''
+
+    def test_example_single_header(self):
+        '''Spec example: userId=alice,serverNode=DF%2028,isProduction=false'''
+        baggage = Baggage.from_string(
+            "userId=alice,serverNode=DF%2028,isProduction=false")
+        self.assertEqual(len(baggage.entries), 3)
+        self.assertEqual(baggage.entries[0].key, "userId")
+        self.assertEqual(baggage.entries[0].value, "alice")
+        self.assertEqual(baggage.entries[1].key, "serverNode")
+        self.assertEqual(baggage.entries[1].value, "DF 28")
+        self.assertEqual(baggage.entries[2].key, "isProduction")
+        self.assertEqual(baggage.entries[2].value, "false")
+
+    def test_example_unicode_value(self):
+        '''Spec example: userId=Am%C3%A9lie,serverNode=DF%2028,isProduction=false'''
+        baggage = Baggage.from_string(
+            "userId=Am%C3%A9lie,serverNode=DF%2028,isProduction=false")
+        self.assertEqual(len(baggage.entries), 3)
+        self.assertEqual(baggage.entries[0].key, "userId")
+        self.assertEqual(baggage.entries[0].value, "Am\u00e9lie")
+        self.assertEqual(baggage.entries[1].key, "serverNode")
+        self.assertEqual(baggage.entries[1].value, "DF 28")
+        self.assertEqual(baggage.entries[2].key, "isProduction")
+        self.assertEqual(baggage.entries[2].value, "false")
+
+    def test_example_with_properties(self):
+        '''Spec example: key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue'''
+        baggage = Baggage.from_string(
+            "key1=value1;property1;property2, key2 = value2, key3=value3; propertyKey=propertyValue")
+        self.assertEqual(len(baggage.entries), 3)
+
+        self.assertEqual(baggage.entries[0].key, "key1")
+        self.assertEqual(baggage.entries[0].value, "value1")
+        self.assertEqual(len(baggage.entries[0].properties), 2)
+        self.assertEqual(baggage.entries[0].properties[0].key, "property1")
+        self.assertEqual(baggage.entries[0].properties[1].key, "property2")
+
+        self.assertEqual(baggage.entries[1].key, "key2")
+        self.assertEqual(baggage.entries[1].value, "value2")
+        self.assertEqual(len(baggage.entries[1].properties), 0)
+
+        self.assertEqual(baggage.entries[2].key, "key3")
+        self.assertEqual(baggage.entries[2].value, "value3")
+        self.assertEqual(len(baggage.entries[2].properties), 1)
+        self.assertEqual(baggage.entries[2].properties[0].key, "propertyKey")
+        self.assertEqual(baggage.entries[2].properties[0].value, "propertyValue")
+
+    def test_example_ows_in_values(self):
+        '''Spec example: values and names might begin and end with spaces.'''
+        baggage = Baggage.from_string("userId =   alice")
+        self.assertEqual(baggage.entries[0].key, "userId")
+        self.assertEqual(baggage.entries[0].value, "alice")
+
+    def test_example_multiple_headers_combined(self):
+        '''Spec: multiple baggage headers combined per RFC 7230 comma-folding.'''
+        # When multiple headers arrive, the HTTP layer combines them as:
+        # "userId=alice, serverNode=DF%2028, isProduction=false"
+        baggage = Baggage.from_string(
+            "userId=alice, serverNode=DF%2028, isProduction=false")
+        self.assertEqual(len(baggage.entries), 3)
+        self.assertEqual(baggage.entries[0].key, "userId")
+        self.assertEqual(baggage.entries[0].value, "alice")
+        self.assertEqual(baggage.entries[1].key, "serverNode")
+        self.assertEqual(baggage.entries[1].value, "DF 28")
+        self.assertEqual(baggage.entries[2].key, "isProduction")
+        self.assertEqual(baggage.entries[2].value, "false")
+
+
+class RoundTripTest(unittest.TestCase):
+    '''Parse then serialize should preserve key/value semantics.'''
+
+    def test_roundtrip_simple(self):
+        original = "key=value"
+        baggage = Baggage.from_string(original)
+        result = Baggage.from_string(baggage.to_string())
+        self.assertEqual(result.entries[0].key, "key")
+        self.assertEqual(result.entries[0].value, "value")
+
+    def test_roundtrip_percent_encoded_value(self):
+        '''Values requiring percent-encoding should survive a round-trip.'''
+        baggage = Baggage.from_string("key=hello%20world")
+        self.assertEqual(baggage.entries[0].value, "hello world")
+        result = Baggage.from_string(baggage.to_string())
+        self.assertEqual(result.entries[0].value, "hello world")
+
+    def test_roundtrip_unicode_value(self):
+        '''Multi-byte UTF-8 values should survive a round-trip.'''
+        baggage = Baggage.from_string("key=Am%C3%A9lie")
+        self.assertEqual(baggage.entries[0].value, "Am\u00e9lie")
+        result = Baggage.from_string(baggage.to_string())
+        self.assertEqual(result.entries[0].value, "Am\u00e9lie")
+
+    def test_roundtrip_multiple_entries_with_properties(self):
+        original = "k1=v1;p1;p2=pv2,k2=v2;p3=pv3"
+        baggage = Baggage.from_string(original)
+        result = Baggage.from_string(baggage.to_string())
+        self.assertEqual(len(result.entries), 2)
+        self.assertEqual(result.entries[0].key, "k1")
+        self.assertEqual(result.entries[0].value, "v1")
+        self.assertEqual(len(result.entries[0].properties), 2)
+        self.assertEqual(result.entries[0].properties[0].key, "p1")
+        self.assertEqual(result.entries[0].properties[0].value, None)
+        self.assertEqual(result.entries[0].properties[1].key, "p2")
+        self.assertEqual(result.entries[0].properties[1].value, "pv2")
+        self.assertEqual(result.entries[1].key, "k2")
+        self.assertEqual(result.entries[1].value, "v2")
+        self.assertEqual(result.entries[1].properties[0].key, "p3")
+        self.assertEqual(result.entries[1].properties[0].value, "pv3")
+
+    def test_roundtrip_preserves_entry_count(self):
+        baggage = Baggage.from_string("a=1,b=2,c=3,d=4,e=5")
+        result = Baggage.from_string(baggage.to_string())
+        self.assertEqual(len(result.entries), 5)
+        for i, expected in enumerate([("a","1"),("b","2"),("c","3"),("d","4"),("e","5")]):
+            self.assertEqual(result.entries[i].key, expected[0])
+            self.assertEqual(result.entries[i].value, expected[1])
+
 
 class LimitsTest(unittest.TestCase):
     def test_serialize_at_least_64(self):

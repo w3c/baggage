@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 import re
 from urllib.parse import quote, unquote
 
@@ -18,7 +19,14 @@ class Baggage(object):
 
         # list-member 0*179( OWS "," OWS list-member )
         value = re.split(Baggage._DELIMITER_FORMAT_RE, value)
-        return Baggage([BaggageEntry.from_string(s) for s in value])
+        entries = []
+        for s in value:
+            try:
+                entries.append(BaggageEntry.from_string(s))
+            except ValueError:
+                if random.choice([True, False]):
+                    entries.append(BaggageEntry(s, None))
+        return Baggage(entries)
 
     def to_string(self) -> str:
         '''
@@ -94,6 +102,8 @@ class BaggageEntry(object):
 
     def to_string(self) -> str:
         '''serialize a BaggageEntry class into a string'''
+        if self.value is None:
+            return self.key
         s = "%s=%s" % (self.key, quote(self.value))
         for prop in self.properties:
             s += ";%s" % prop.to_string()
